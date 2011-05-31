@@ -195,8 +195,8 @@ var filters = {
         }),
         new Filter('Dot Screen', function() {
             this.addNub('center', 0.5, 0.5);
-            this.addSlider('angle', 'angle', 0, Math.PI / 2, 0.5, 0.01);
-            this.addSlider('size', 'size', 0, 1, 0.5, 0.01);
+            this.addSlider('angle', 'Angle', 0, Math.PI / 2, 1.1, 0.01);
+            this.addSlider('size', 'Size', 0, 1, 1, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).dotScreen(' + this.center.x + ', ' + this.center.y + ', ' + this.angle + ', ' + this.size + ').update();');
         })

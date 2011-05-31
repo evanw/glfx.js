@@ -1,5 +1,6 @@
 a { color: inherit; }
 pre, code { font: 15px/17px Inconsolata, monospace; }
+pre { background: #BFBFBF; padding: 10px; }
 code { display: block; padding-left: 2em; text-indent: -2em; }
 body { margin: 0 auto; padding: 0 30px; max-width: 1000px; font: 15px/20px Arial, sans-serif; background: #3F3F3F; color: #DDD; }
 
@@ -129,8 +130,9 @@ h2 {
                 0 14px 20px rgba(0,0,0,.15);
 }
 
-h3 { margin: 0; padding: 20px 0 0 0; text-align: center; font-size: 30px; text-shadow: 0 1px 0 white; }
-p { margin: 0; padding: 20px 0 0 0; }
+p, h3, h4 { margin: 0; padding: 20px 0 0 0; }
+h3 { text-align: center; font-size: 30px; text-shadow: 0 1px 0 white; }
+h4 { font-size: 25px; text-shadow: 0 1px 0 white; padding-top: 60px; }
 
 .block {
     margin: 0 0 20px 0;
@@ -194,7 +196,7 @@ p { margin: 0; padding: 20px 0 0 0; }
     -moz-box-shadow: 0 0 3px black;
     -webkit-box-shadow: 0 0 3px black;
 }
-#placeholder { background: rgba(0, 0, 0, 0.8); border-radius: 30px; padding: 5px 17px; color: white; }
+#placeholder { background: rgba(0, 0, 0, 0.8); border-radius: 30px; padding: 5px 17px; color: white; font-weight: bold; }
 canvas { vertical-align: top; }
 
 table { border-collapse: collapse; }

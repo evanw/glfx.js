@@ -18,7 +18,60 @@
         <li><a href="http://github.com/evanw/glfx.js">Source Code</a></li>
     </ul>
     <div class="block">
-    <p>Docs go here.</p>
+    <h3>Documentation</h3>
+
+    <h4>Quick Start</h4>
+    <pre>&lt;script src="glfx.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+
+window.onload = function() {
+    // try to create a WebGL canvas (will fail if WebGL isn't supported)
+    try {
+        var canvas = fx.canvas();
+    } catch (e) {
+        alert(e);
+        return;
+    }
+
+    // convert the image to a texture
+    var image = document.getElementById('image');
+    var texture = canvas.texture(image);
+
+    // apply the ink filter
+    canvas.draw(texture).ink(0.5).update();
+
+    // replace the image with the canvas
+    image.parentNode.appendChild(canvas);
+    image.parentNode.removeChild(image);
+};
+
+&lt;/script&gt;
+&lt;img id="image" src="image.jpg"&gt;</pre>
+
+    <h4>Core API</h4>
+    <p>TODO</p>
+
+    <h4>Filters</h4>
+    <ul>
+        <li>Adjust<ul>
+            <li>Brightness / Contrast</li>
+            <li>Hue / Saturation</li>
+        </ul></li>
+        <li>Artistic<ul>
+            <li>Dot Screen</li>
+            <li>Ink</li>
+        </ul></li>
+        <li>Blur<ul>
+            <li>Zoom Blur</li>
+        </ul></li>
+        <li>Warp<ul>
+            <li>Bulge / Pinch</li>
+            <li>Matrix Warp</li>
+            <li>Perspective</li>
+            <li>Swirl</li>
+        </ul></li>
+    </ul>
+    <p>TODO</p>
 
     </div>
     <div class="footer">Created by <a href="http://madebyevan.com">Evan Wallace</a> in 2011</div>
