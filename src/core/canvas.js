@@ -7,9 +7,12 @@ function clamp(lo, value, hi) {
 function texture(image) {
     gl = this.gl;
 
-    return {
-        _: Texture.fromImage(image)
-    };
+    // Draw a 1px transparent border around the edge of the image
+    var texture = new Texture(image.width + 2, image.height + 2, gl.RGBA, gl.UNSIGNED_BYTE);
+    texture.fillUsingCanvas(function(c) {
+        c.drawImage(image, 1, 1);
+    });
+    return { _: texture };
 }
 
 function initialize(width, height) {
@@ -19,9 +22,10 @@ function initialize(width, height) {
     this._.spareTexture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
     this._.flippedShader = new Shader(null, '\
         uniform sampler2D texture;\
+        uniform vec2 texSize;\
         varying vec2 texCoord;\
         void main() {\
-            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y));\
+            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y) + 1.0 / texSize);\
         }\
     ');
     this._.isInitialized = true;
@@ -46,7 +50,9 @@ function update() {
     gl = this.gl;
 
     this._.texture.use();
-    this._.flippedShader.drawRect();
+    this._.flippedShader.uniforms({
+        texSize: [this._.texture.width, this._.texture.height]
+    }).drawRect();
 
     return this;
 }
@@ -84,6 +90,9 @@ exports['canvas'] = function() {
     canvas['replace'] = replace;
     canvas['brightnessContrast'] = brightnessContrast;
     canvas['hueSaturation'] = hueSaturation;
+    canvas['perspective'] = perspective;
+    canvas['matrixWarp'] = matrixWarp;
+    canvas['bulgePinch'] = bulgePinch;
     canvas['swirl'] = swirl;
     return canvas;
 };

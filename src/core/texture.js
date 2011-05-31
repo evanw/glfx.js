@@ -49,7 +49,7 @@ var Texture = (function() {
         // do the drawing
         callback();
 
-        // stop rendering to this
+        // stop rendering to this texture
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     };
 
@@ -59,13 +59,16 @@ var Texture = (function() {
         if (canvas == null) canvas = document.createElement('canvas');
         canvas.width = texture.width;
         canvas.height = texture.height;
-        return canvas.getContext('2d');
+        var c = canvas.getContext('2d');
+        c.clearRect(0, 0, canvas.width, canvas.height);
+        return c;
     }
 
     Texture.prototype.fillUsingCanvas = function(callback) {
         callback(getCanvas(this));
         this.format = gl.RGBA;
         this.type = gl.UNSIGNED_BYTE;
+        gl.bindTexture(gl.TEXTURE_2D, this.id);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
         return this;
     };

@@ -69,6 +69,9 @@ var Shader = (function() {
                     case 2: gl.uniform2fv(location, new Float32Array(value)); break;
                     case 3: gl.uniform3fv(location, new Float32Array(value)); break;
                     case 4: gl.uniform4fv(location, new Float32Array(value)); break;
+                    case 9: gl.uniformMatrix3fv(location, false, new Float32Array(value)); break;
+                    case 16: gl.uniformMatrix4fv(location, false, new Float32Array(value)); break;
+                    default: throw 'dont\'t know how to load uniform "' + name + '" of length ' + value.length;
                 }
             } else if (isNumber(value)) {
                 gl.uniform1f(location, value);

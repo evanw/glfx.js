@@ -16,13 +16,12 @@ function swirl(centerX, centerY, radius, angle) {
                 float s = sin(theta);\
                 float c = cos(theta);\
                 coord = vec2(\
-                    dot(coord, vec2(c, -s)),\
-                    dot(coord, vec2(s, c))\
+                    coord.x * c - coord.y * s,\
+                    coord.x * s + coord.y * c\
                 );\
             }\
             coord += center;\
-            vec3 color = texture2D(texture, coord / texSize).rgb;\
-            gl_FragColor = vec4(color, 1.0);\
+            gl_FragColor = texture2D(texture, coord / texSize);\
         }\
     ');
 
