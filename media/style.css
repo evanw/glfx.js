@@ -190,6 +190,8 @@ p { margin: 0; padding: 20px 0 0 0; }
     position: relative; width: 640px; height: 427px; background: #BFBFBF; display: inline-block; line-height: 427px; overflow: hidden;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEW/v7////+Zw/90AAAAEUlEQVQI12P4z8CAFWEX/Q8Afr8P8erzE9cAAAAASUVORK5CYII=);
     border: 1px solid black;
+    box-shadow: 0 0 3px black;
+    -moz-box-shadow: 0 0 3px black;
     -webkit-box-shadow: 0 0 3px black;
 }
 #placeholder { background: rgba(0, 0, 0, 0.8); border-radius: 30px; padding: 5px 17px; color: white; }

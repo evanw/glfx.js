@@ -151,6 +151,14 @@ var filters = {
             this.setCode('canvas.draw(texture).hueSaturation(' + this.hue + ', ' + this.saturation + ').update();');
         })
     ],
+    'Blur': [
+        new Filter('Zoom Blur', function() {
+            this.addNub('center', 0.5, 0.5);
+            this.addSlider('strength', 'Strength', 0, 1, 0.3, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).zoomBlur(' + this.center.x + ', ' + this.center.y + ', ' + this.strength + ').update();');
+        })
+    ],
     'Warp': [
         new Filter('Swirl', function() {
             this.addNub('center', 0.5, 0.5);
@@ -177,6 +185,20 @@ var filters = {
             var before = [xmin, ymin, xmax, ymin, xmin, ymax, xmax, ymax];
             var after = [this.a.x, this.a.y, this.b.x, this.b.y, this.c.x, this.c.y, this.d.x, this.d.y];
             this.setCode('canvas.draw(texture).perspective([' + before + '], [' + after + ']).update();');
+        })
+    ],
+    'Artistic': [
+        new Filter('Ink', function() {
+            this.addSlider('strength', 'Strength', 0, 1, 0.5, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).ink(' + this.strength + ').update();');
+        }),
+        new Filter('Dot Screen', function() {
+            this.addNub('center', 0.5, 0.5);
+            this.addSlider('angle', 'angle', 0, Math.PI / 2, 0.5, 0.01);
+            this.addSlider('size', 'size', 0, 1, 0.5, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).dotScreen(' + this.center.x + ', ' + this.center.y + ', ' + this.angle + ', ' + this.size + ').update();');
         })
     ]
 };

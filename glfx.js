@@ -10,13 +10,7 @@ function clamp(lo, value, hi) {
 
 function texture(image) {
     gl = this.gl;
-
-    // Draw a 1px transparent border around the edge of the image
-    var texture = new Texture(image.width + 2, image.height + 2, gl.RGBA, gl.UNSIGNED_BYTE);
-    texture.fillUsingCanvas(function(c) {
-        c.drawImage(image, 1, 1);
-    });
-    return { _: texture };
+    return { _: Texture.fromImage(image) };
 }
 
 function initialize(width, height) {
@@ -29,7 +23,7 @@ function initialize(width, height) {
         uniform vec2 texSize;\
         varying vec2 texCoord;\
         void main() {\
-            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y) + 1.0 / texSize);\
+            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y));\
         }\
     ');
     this._.isInitialized = true;
@@ -81,6 +75,9 @@ exports['canvas'] = function() {
     try {
         canvas.gl = canvas.getContext('experimental-webgl');
     } catch (e) {
+        canvas.gl = null;
+    }
+    if (!canvas.gl) {
         throw 'This browser does not support WebGL';
     }
     canvas._ = {
@@ -97,7 +94,10 @@ exports['canvas'] = function() {
     canvas['perspective'] = perspective;
     canvas['matrixWarp'] = matrixWarp;
     canvas['bulgePinch'] = bulgePinch;
+    canvas['dotScreen'] = dotScreen;
+    canvas['zoomBlur'] = zoomBlur;
     canvas['swirl'] = swirl;
+    canvas['ink'] = ink;
     return canvas;
 };
 
@@ -415,30 +415,139 @@ function hueSaturation(hue, saturation) {
     return this;
 }
 
-// src/filters/warp/bulgepinch.js
-function bulgePinch(centerX, centerY, radius, strength) {
-    gl.bulgePinch = gl.bulgePinch || new Shader(null, '\
+// src/filters/artistic/dotscreen.js
+function dotScreen(centerX, centerY, angle, size) {
+    gl.dotScreen = gl.dotScreen || new Shader(null, '\
         uniform sampler2D texture;\
-        uniform float radius;\
-        uniform float strength;\
         uniform vec2 center;\
+        uniform float angle;\
+        uniform float size;\
         uniform vec2 texSize;\
         varying vec2 texCoord;\
         void main() {\
-            vec2 coord = texCoord * texSize;\
-            coord -= center + 1.0;\
-            float distance = length(coord);\
-            if (distance < radius) {\
-                float percent = distance / radius;\
-                if (strength > 0.0) {\
-                    coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\
-                } else {\
-                    coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\
+            vec3 color = texture2D(texture, texCoord).rgb;\
+            float s = sin(angle), c = cos(angle);\
+            vec2 tex = texCoord * texSize - center;\
+            vec2 point = vec2(\
+                c * tex.x - s * tex.y,\
+                s * tex.x + c * tex.y\
+            ) * size;\
+            float weight = (sin(point.x) * sin(point.y)) * 2.0;\
+            float average = (color.r + color.g + color.b) / 3.0;\
+            color = vec3(average + (average - 0.6) * 4.0 + weight);\
+            gl_FragColor = vec4(color, 1.0);\
+        }\
+    ');
+
+    simpleShader.call(this, gl.dotScreen, {
+        center: [centerX, centerY],
+        angle: angle,
+        size: size,
+        texSize: [this.width, this.height]
+    });
+
+    return this;
+}
+
+// src/filters/artistic/ink.js
+function ink(strength) {
+    gl.ink = gl.ink || new Shader(null, '\
+        uniform sampler2D texture;\
+        uniform float strength;\
+        uniform vec2 texSize;\
+        varying vec2 texCoord;\
+        void main() {\
+            vec2 dx = vec2(1.0 / texSize.x, 0.0);\
+            vec2 dy = vec2(0.0, 1.0 / texSize.y);\
+            vec3 color = texture2D(texture, texCoord).rgb;\
+            float bigTotal = 0.0;\
+            float smallTotal = 0.0;\
+            vec3 bigAverage = vec3(0.0);\
+            vec3 smallAverage = vec3(0.0);\
+            for (float x = -2.0; x <= 2.0; x += 1.0) {\
+                for (float y = -2.0; y <= 2.0; y += 1.0) {\
+                    vec3 sample = texture2D(texture, texCoord + dx * x + dy * y).rgb;\
+                    bigAverage += sample;\
+                    bigTotal += 1.0;\
+                    if (abs(x) + abs(y) < 2.0) {\
+                        smallAverage += sample;\
+                        smallTotal += 1.0;\
+                    }\
                 }\
             }\
-            coord += center + 1.0;\
-            gl_FragColor = texture2D(texture, coord / texSize);\
+            vec3 edge = max(vec3(0.0), bigAverage / bigTotal - smallAverage / smallTotal);\
+            gl_FragColor = vec4(color - dot(edge, edge) * strength * strength * 200.0, 1.0);\
         }\
+    ');
+
+    simpleShader.call(this, gl.ink, {
+        strength: strength,
+        texSize: [this.width, this.height]
+    });
+
+    return this;
+}
+
+// src/filters/blur/zoomblur.js
+function zoomBlur(centerX, centerY, strength) {
+    gl.zoomBlur = gl.zoomBlur || new Shader(null, '\
+        uniform sampler2D texture;\
+        uniform vec2 center;\
+        uniform float strength;\
+        uniform vec2 texSize;\
+        varying vec2 texCoord;\
+        \
+        /* random number between 0 and 1 */\
+        float random(vec3 scale, float seed) {\
+            /* use the fragment position for randomness */\
+            return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\
+        }\
+        \
+        void main() {\
+            vec3 color = vec3(0.0);\
+            float total = 0.0;\
+            vec2 toCenter = center - texCoord * texSize;\
+            \
+            /* randomize the lookup values to hide the fixed number of samples */\
+            float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\
+            \
+            for (float t = 0.0; t <= 40.0; t++) {\
+                float percent = (t + offset) / 40.0;\
+                float weight = 4.0 * (percent - percent * percent);\
+                color += texture2D(texture, texCoord + toCenter * percent * strength / texSize).rgb * weight;\
+                total += weight;\
+            }\
+            gl_FragColor = vec4(color / total, 1.0);\
+        }\
+    ');
+
+    simpleShader.call(this, gl.zoomBlur, {
+        center: [centerX, centerY],
+        strength: strength,
+        texSize: [this.width, this.height]
+    });
+
+    return this;
+}
+
+// src/filters/warp/bulgepinch.js
+function bulgePinch(centerX, centerY, radius, strength) {
+    gl.bulgePinch = gl.bulgePinch || warpShader('\
+        uniform float radius;\
+        uniform float strength;\
+        uniform vec2 center;\
+    ', '\
+        coord -= center;\
+        float distance = length(coord);\
+        if (distance < radius) {\
+            float percent = distance / radius;\
+            if (strength > 0.0) {\
+                coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\
+            } else {\
+                coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\
+            }\
+        }\
+        coord += center;\
     ');
 
     simpleShader.call(this, gl.bulgePinch, {
@@ -451,19 +560,31 @@ function bulgePinch(centerX, centerY, radius, strength) {
     return this;
 }
 
+// src/filters/warp/common.js
+function warpShader(uniforms, warp) {
+    return new Shader(null, uniforms + '\
+    uniform sampler2D texture;\
+    uniform vec2 texSize;\
+    varying vec2 texCoord;\
+    void main() {\
+        vec2 coord = texCoord * texSize;\
+        ' + warp + '\
+        gl_FragColor = texture2D(texture, coord / texSize);\
+        vec2 clampedCoord = clamp(coord, vec2(0.0), texSize);\
+        if (coord != clampedCoord) {\
+            /* fade to transparent if we are outside the image (using premultiplied alpha!) */\
+            gl_FragColor *= max(0.0, 1.0 - length(coord - clampedCoord));\
+        }\
+    }');
+}
+
 // src/filters/warp/matrixwarp.js
 function matrixWarp(matrix) {
-    gl.matrixWarp = gl.matrixWarp || new Shader(null, '\
-        uniform sampler2D texture;\
+    gl.matrixWarp = gl.matrixWarp || warpShader('\
         uniform mat3 matrix;\
-        uniform vec2 texSize;\
-        varying vec2 texCoord;\
-        void main() {\
-            vec2 coord = texCoord * texSize;\
-            vec3 warp = matrix * vec3(coord, 1.0);\
-            coord = warp.xy / warp.z;\
-            gl_FragColor = texture2D(texture, coord / texSize);\
-        }\
+    ', '\
+        vec3 warp = matrix * vec3(coord, 1.0);\
+        coord = warp.xy / warp.z;\
     ');
 
     // Flatten all arguments into one big list
@@ -557,30 +678,24 @@ function perspective(before, after) {
 
 // src/filters/warp/swirl.js
 function swirl(centerX, centerY, radius, angle) {
-    gl.swirl = gl.swirl || new Shader(null, '\
-        uniform sampler2D texture;\
+    gl.swirl = gl.swirl || warpShader('\
         uniform float radius;\
         uniform float angle;\
         uniform vec2 center;\
-        uniform vec2 texSize;\
-        varying vec2 texCoord;\
-        void main() {\
-            vec2 coord = texCoord * texSize;\
-            coord -= center;\
-            float distance = length(coord);\
-            if (distance < radius) {\
-                float percent = (radius - distance) / radius;\
-                float theta = percent * percent * angle;\
-                float s = sin(theta);\
-                float c = cos(theta);\
-                coord = vec2(\
-                    coord.x * c - coord.y * s,\
-                    coord.x * s + coord.y * c\
-                );\
-            }\
-            coord += center;\
-            gl_FragColor = texture2D(texture, coord / texSize);\
+    ', '\
+        coord -= center;\
+        float distance = length(coord);\
+        if (distance < radius) {\
+            float percent = (radius - distance) / radius;\
+            float theta = percent * percent * angle;\
+            float s = sin(theta);\
+            float c = cos(theta);\
+            coord = vec2(\
+                coord.x * c - coord.y * s,\
+                coord.x * s + coord.y * c\
+            );\
         }\
+        coord += center;\
     ');
 
     simpleShader.call(this, gl.swirl, {
