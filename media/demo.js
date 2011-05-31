@@ -128,7 +128,7 @@ $(window).load(function() {
     image.onload = function() {
         init(image);
     };
-    image.src = '/media/orange.jpg';
+    image.src = '/glfx.js/media/orange.jpg';
 });
 
 ////////////////////////////////////////////////////////////////////////////////

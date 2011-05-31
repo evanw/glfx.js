@@ -18,7 +18,7 @@ function init(image) {
         var offset = $(canvas).offset();
         var x = e.pageX - offset.left;
         var y = e.pageY - offset.top;
-        canvas.draw(texture).swirl(x, y, 200, 0.5).update();
+        canvas.draw(texture).swirl(x, y, 200, 4).update();
     });
 }
 
@@ -27,5 +27,5 @@ $(window).load(function() {
     image.onload = function() {
         init(image);
     };
-    image.src = '/media/orange.jpg';
+    image.src = '/glfx.js/media/orange.jpg';
 });
