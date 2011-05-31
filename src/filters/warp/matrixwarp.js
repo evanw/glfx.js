@@ -1,15 +1,9 @@
 function matrixWarp(matrix) {
-    gl.matrixWarp = gl.matrixWarp || new Shader(null, '\
-        uniform sampler2D texture;\
+    gl.matrixWarp = gl.matrixWarp || warpShader('\
         uniform mat3 matrix;\
-        uniform vec2 texSize;\
-        varying vec2 texCoord;\
-        void main() {\
-            vec2 coord = texCoord * texSize;\
-            vec3 warp = matrix * vec3(coord, 1.0);\
-            coord = warp.xy / warp.z;\
-            gl_FragColor = texture2D(texture, coord / texSize);\
-        }\
+    ', '\
+        vec3 warp = matrix * vec3(coord, 1.0);\
+        coord = warp.xy / warp.z;\
     ');
 
     // Flatten all arguments into one big list

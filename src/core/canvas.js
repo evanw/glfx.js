@@ -6,13 +6,7 @@ function clamp(lo, value, hi) {
 
 function texture(image) {
     gl = this.gl;
-
-    // Draw a 1px transparent border around the edge of the image
-    var texture = new Texture(image.width + 2, image.height + 2, gl.RGBA, gl.UNSIGNED_BYTE);
-    texture.fillUsingCanvas(function(c) {
-        c.drawImage(image, 1, 1);
-    });
-    return { _: texture };
+    return { _: Texture.fromImage(image) };
 }
 
 function initialize(width, height) {
@@ -25,7 +19,7 @@ function initialize(width, height) {
         uniform vec2 texSize;\
         varying vec2 texCoord;\
         void main() {\
-            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y) + 1.0 / texSize);\
+            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y));\
         }\
     ');
     this._.isInitialized = true;
@@ -77,6 +71,9 @@ exports['canvas'] = function() {
     try {
         canvas.gl = canvas.getContext('experimental-webgl');
     } catch (e) {
+        canvas.gl = null;
+    }
+    if (!canvas.gl) {
         throw 'This browser does not support WebGL';
     }
     canvas._ = {
@@ -93,6 +90,9 @@ exports['canvas'] = function() {
     canvas['perspective'] = perspective;
     canvas['matrixWarp'] = matrixWarp;
     canvas['bulgePinch'] = bulgePinch;
+    canvas['dotScreen'] = dotScreen;
+    canvas['zoomBlur'] = zoomBlur;
     canvas['swirl'] = swirl;
+    canvas['ink'] = ink;
     return canvas;
 };
