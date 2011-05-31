@@ -1,5 +1,6 @@
 a { color: inherit; }
 pre, code { font: 15px/17px Inconsolata, monospace; }
+code { display: block; padding-left: 2em; text-indent: -2em; }
 body { margin: 0 auto; padding: 0 30px; max-width: 1000px; font: 15px/20px Arial, sans-serif; background: #3F3F3F; color: #DDD; }
 
 h1 {
@@ -185,7 +186,13 @@ p { margin: 0; padding: 20px 0 0 0; }
 }
 
 .placeholder { text-align: center; padding: 40px 0 20px 0; font-size: 12px; }
-.placeholder .container { position: relative; width: 640px; height: 427px; background: #BFBFBF; display: inline-block; line-height: 427px; overflow: hidden; }
+.placeholder .container {
+    position: relative; width: 640px; height: 427px; background: #BFBFBF; display: inline-block; line-height: 427px; overflow: hidden;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEW/v7////+Zw/90AAAAEUlEQVQI12P4z8CAFWEX/Q8Afr8P8erzE9cAAAAASUVORK5CYII=);
+    border: 1px solid black;
+    -webkit-box-shadow: 0 0 3px black;
+}
+#placeholder { background: rgba(0, 0, 0, 0.8); border-radius: 30px; padding: 5px 17px; color: white; }
 canvas { vertical-align: top; }
 
 table { border-collapse: collapse; }
@@ -193,6 +200,7 @@ th, td { padding: 0; text-align: left; vertical-align: top; }
 th { width: 100px; padding-right: 10px; }
 
 .nub {
+    position: absolute;
     width: 6px;
     height: 6px;
     margin: -5px;

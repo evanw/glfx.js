@@ -11,9 +11,12 @@ function clamp(lo, value, hi) {
 function texture(image) {
     gl = this.gl;
 
-    return {
-        _: Texture.fromImage(image)
-    };
+    // Draw a 1px transparent border around the edge of the image
+    var texture = new Texture(image.width + 2, image.height + 2, gl.RGBA, gl.UNSIGNED_BYTE);
+    texture.fillUsingCanvas(function(c) {
+        c.drawImage(image, 1, 1);
+    });
+    return { _: texture };
 }
 
 function initialize(width, height) {
@@ -23,9 +26,10 @@ function initialize(width, height) {
     this._.spareTexture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
     this._.flippedShader = new Shader(null, '\
         uniform sampler2D texture;\
+        uniform vec2 texSize;\
         varying vec2 texCoord;\
         void main() {\
-            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y));\
+            gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y) + 1.0 / texSize);\
         }\
     ');
     this._.isInitialized = true;
@@ -50,7 +54,9 @@ function update() {
     gl = this.gl;
 
     this._.texture.use();
-    this._.flippedShader.drawRect();
+    this._.flippedShader.uniforms({
+        texSize: [this._.texture.width, this._.texture.height]
+    }).drawRect();
 
     return this;
 }
@@ -88,6 +94,9 @@ exports['canvas'] = function() {
     canvas['replace'] = replace;
     canvas['brightnessContrast'] = brightnessContrast;
     canvas['hueSaturation'] = hueSaturation;
+    canvas['perspective'] = perspective;
+    canvas['matrixWarp'] = matrixWarp;
+    canvas['bulgePinch'] = bulgePinch;
     canvas['swirl'] = swirl;
     return canvas;
 };
@@ -164,6 +173,9 @@ var Shader = (function() {
                     case 2: gl.uniform2fv(location, new Float32Array(value)); break;
                     case 3: gl.uniform3fv(location, new Float32Array(value)); break;
                     case 4: gl.uniform4fv(location, new Float32Array(value)); break;
+                    case 9: gl.uniformMatrix3fv(location, false, new Float32Array(value)); break;
+                    case 16: gl.uniformMatrix4fv(location, false, new Float32Array(value)); break;
+                    default: throw 'dont\'t know how to load uniform "' + name + '" of length ' + value.length;
                 }
             } else if (isNumber(value)) {
                 gl.uniform1f(location, value);
@@ -285,7 +297,7 @@ var Texture = (function() {
         // do the drawing
         callback();
 
-        // stop rendering to this
+        // stop rendering to this texture
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     };
 
@@ -295,13 +307,16 @@ var Texture = (function() {
         if (canvas == null) canvas = document.createElement('canvas');
         canvas.width = texture.width;
         canvas.height = texture.height;
-        return canvas.getContext('2d');
+        var c = canvas.getContext('2d');
+        c.clearRect(0, 0, canvas.width, canvas.height);
+        return c;
     }
 
     Texture.prototype.fillUsingCanvas = function(callback) {
         callback(getCanvas(this));
         this.format = gl.RGBA;
         this.type = gl.UNSIGNED_BYTE;
+        gl.bindTexture(gl.TEXTURE_2D, this.id);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
         return this;
     };
@@ -332,7 +347,7 @@ var Texture = (function() {
     return Texture;
 })();
 
-// src/filters/brightnesscontrast.js
+// src/filters/adjust/brightnesscontrast.js
 function brightnessContrast(brightness, contrast) {
     gl.brightnessContrast = gl.brightnessContrast || new Shader(null, '\
         uniform sampler2D texture;\
@@ -359,7 +374,7 @@ function brightnessContrast(brightness, contrast) {
     return this;
 }
 
-// src/filters/huesaturation.js
+// src/filters/adjust/huesaturation.js
 function hueSaturation(hue, saturation) {
     gl.hueSaturation = gl.hueSaturation || new Shader(null, '\
         uniform sampler2D texture;\
@@ -400,7 +415,147 @@ function hueSaturation(hue, saturation) {
     return this;
 }
 
-// src/filters/swirl.js
+// src/filters/warp/bulgepinch.js
+function bulgePinch(centerX, centerY, radius, strength) {
+    gl.bulgePinch = gl.bulgePinch || new Shader(null, '\
+        uniform sampler2D texture;\
+        uniform float radius;\
+        uniform float strength;\
+        uniform vec2 center;\
+        uniform vec2 texSize;\
+        varying vec2 texCoord;\
+        void main() {\
+            vec2 coord = texCoord * texSize;\
+            coord -= center + 1.0;\
+            float distance = length(coord);\
+            if (distance < radius) {\
+                float percent = distance / radius;\
+                if (strength > 0.0) {\
+                    coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\
+                } else {\
+                    coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\
+                }\
+            }\
+            coord += center + 1.0;\
+            gl_FragColor = texture2D(texture, coord / texSize);\
+        }\
+    ');
+
+    simpleShader.call(this, gl.bulgePinch, {
+        radius: radius,
+        strength: strength,
+        center: [centerX, centerY],
+        texSize: [this.width, this.height]
+    });
+
+    return this;
+}
+
+// src/filters/warp/matrixwarp.js
+function matrixWarp(matrix) {
+    gl.matrixWarp = gl.matrixWarp || new Shader(null, '\
+        uniform sampler2D texture;\
+        uniform mat3 matrix;\
+        uniform vec2 texSize;\
+        varying vec2 texCoord;\
+        void main() {\
+            vec2 coord = texCoord * texSize;\
+            vec3 warp = matrix * vec3(coord, 1.0);\
+            coord = warp.xy / warp.z;\
+            gl_FragColor = texture2D(texture, coord / texSize);\
+        }\
+    ');
+
+    // Flatten all arguments into one big list
+    matrix = Array.prototype.concat.apply([], arguments);
+
+    // Extract a 4x4 matrix out of the arguments
+    if (matrix.length == 4) {
+        matrix = [
+            matrix[0], matrix[2], 0,
+            matrix[1], matrix[3], 0,
+            0, 0, 1
+        ];
+    } else if (matrix.length == 9) {
+        matrix = [
+            matrix[0], matrix[3], matrix[6],
+            matrix[1], matrix[4], matrix[7],
+            matrix[2], matrix[5], matrix[8]
+        ];
+    } else {
+        throw 'can only warp with 2x2 or 3x3 matrix';
+    }
+
+    simpleShader.call(this, gl.matrixWarp, {
+        matrix: matrix,
+        texSize: [this.width, this.height]
+    });
+
+    return this;
+}
+
+// src/filters/warp/perspective.js
+function getSquareToQuad(x0, y0, x1, y1, x2, y2, x3, y3) {
+    var dx1 = x1 - x2;
+    var dy1 = y1 - y2;
+    var dx2 = x3 - x2;
+    var dy2 = y3 - y2;
+    var dx3 = x0 - x1 + x2 - x3;
+    var dy3 = y0 - y1 + y2 - y3;
+    var m = {};
+    var invdet = 1 / (dx1*dy2 - dx2*dy1);
+    m.m20 = (dx3*dy2 - dx2*dy3)*invdet;
+    m.m21 = (dx1*dy3 - dx3*dy1)*invdet;
+    m.m22 = 1;
+    m.m00 = x1 - x0 + m.m20*x1;
+    m.m01 = x3 - x0 + m.m21*x3;
+    m.m02 = x0;
+    m.m10 = y1 - y0 + m.m20*y1;
+    m.m11 = y3 - y0 + m.m21*y3;
+    m.m12 = y0;
+    return m;
+}
+
+function getAdjoint(m) {
+    return {
+        m00: m.m11*m.m22 - m.m12*m.m21,
+        m10: m.m12*m.m20 - m.m10*m.m22,
+        m20: m.m10*m.m21 - m.m11*m.m20,
+        m01: m.m02*m.m21 - m.m01*m.m22,
+        m11: m.m00*m.m22 - m.m02*m.m20,
+        m21: m.m01*m.m20 - m.m00*m.m21,
+        m02: m.m01*m.m12 - m.m02*m.m11,
+        m12: m.m02*m.m10 - m.m00*m.m12,
+        m22: m.m00*m.m11 - m.m01*m.m10
+    };
+}
+
+function multiply(a, b) {
+    return {
+        m00: a.m00*b.m00 + a.m10*b.m01 + a.m20*b.m02,
+        m10: a.m00*b.m10 + a.m10*b.m11 + a.m20*b.m12,
+        m20: a.m00*b.m20 + a.m10*b.m21 + a.m20*b.m22,
+        m01: a.m01*b.m00 + a.m11*b.m01 + a.m21*b.m02,
+        m11: a.m01*b.m10 + a.m11*b.m11 + a.m21*b.m12,
+        m21: a.m01*b.m20 + a.m11*b.m21 + a.m21*b.m22,
+        m02: a.m02*b.m00 + a.m12*b.m01 + a.m22*b.m02,
+        m12: a.m02*b.m10 + a.m12*b.m11 + a.m22*b.m12,
+        m22: a.m02*b.m20 + a.m12*b.m21 + a.m22*b.m22
+    };
+}
+
+function perspective(before, after) {
+    var A = getSquareToQuad.apply(null, after);
+    var B = getSquareToQuad.apply(null, before);
+    var C = multiply(getAdjoint(A), B);
+    return this.matrixWarp(
+        C.m00, C.m01, C.m02,
+        C.m10, C.m11, C.m12,
+        C.m20, C.m21, C.m22
+    );
+}
+
+// src/filters/warp/swirl.js
 function swirl(centerX, centerY, radius, angle) {
     gl.swirl = gl.swirl || new Shader(null, '\
         uniform sampler2D texture;\
@@ -419,13 +574,12 @@ function swirl(centerX, centerY, radius, angle) {
                 float s = sin(theta);\
                 float c = cos(theta);\
                 coord = vec2(\
-                    dot(coord, vec2(c, -s)),\
-                    dot(coord, vec2(s, c))\
+                    coord.x * c - coord.y * s,\
+                    coord.x * s + coord.y * c\
                 );\
             }\
             coord += center;\
-            vec3 color = texture2D(texture, coord / texSize).rgb;\
-            gl_FragColor = vec4(color, 1.0);\
+            gl_FragColor = texture2D(texture, coord / texSize);\
         }\
     ');
 

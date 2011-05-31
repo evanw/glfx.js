@@ -64,7 +64,8 @@ Filter.prototype.use = function() {
         }; })(this, nub);
         $('#nub' + i).draggable({
             drag: ondrag,
-            containment: 'parent'
+            containment: 'parent',
+            scroll: false
         }).css({ left: x, top: y });
         this[nub.name] = { x: x, y: y };
     }
@@ -153,10 +154,29 @@ var filters = {
     'Warp': [
         new Filter('Swirl', function() {
             this.addNub('center', 0.5, 0.5);
-            this.addSlider('angle', 'Angle', -25, 25, 6, 0.01);
+            this.addSlider('angle', 'Angle', -25, 25, 6, 0.1);
             this.addSlider('radius', 'Radius', 0, 600, 200, 1);
         }, function() {
             this.setCode('canvas.draw(texture).swirl(' + this.center.x + ', ' + this.center.y + ', ' + this.radius + ', ' + this.angle + ').update();');
+        }),
+        new Filter('Bulge / Pinch', function() {
+            this.addNub('center', 0.5, 0.5);
+            this.addSlider('strength', 'Strength', -1, 1, 1, 0.01);
+            this.addSlider('radius', 'Radius', 0, 600, 200, 1);
+        }, function() {
+            this.setCode('canvas.draw(texture).bulgePinch(' + this.center.x + ', ' + this.center.y + ', ' + this.radius + ', ' + this.strength + ').update();');
+        }),
+        new Filter('Perspective', function() {
+            this.addNub('a', 0.25, 0.25);
+            this.addNub('b', 0.75, 0.25);
+            this.addNub('c', 0.25, 0.75);
+            this.addNub('d', 0.75, 0.75);
+        }, function() {
+            var xmin = canvas.width * 0.25, ymin = canvas.height * 0.25;
+            var xmax = canvas.width * 0.75, ymax = canvas.height * 0.75;
+            var before = [xmin, ymin, xmax, ymin, xmin, ymax, xmax, ymax];
+            var after = [this.a.x, this.a.y, this.b.x, this.b.y, this.c.x, this.c.y, this.d.x, this.d.y];
+            this.setCode('canvas.draw(texture).perspective([' + before + '], [' + after + ']).update();');
         })
     ]
 };
