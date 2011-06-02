@@ -129,7 +129,7 @@ $(window).load(function() {
     image.onload = function() {
         init(image);
     };
-    image.src = '/glfx.js/media/orange.jpg';
+    image.src = '/glfx.js/media/image.jpg';
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,14 +189,14 @@ var filters = {
     ],
     'Artistic': [
         new Filter('Ink', function() {
-            this.addSlider('strength', 'Strength', 0, 1, 0.5, 0.01);
+            this.addSlider('strength', 'Strength', 0, 1, 0.25, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).ink(' + this.strength + ').update();');
         }),
         new Filter('Dot Screen', function() {
             this.addNub('center', 0.5, 0.5);
             this.addSlider('angle', 'Angle', 0, Math.PI / 2, 1.1, 0.01);
-            this.addSlider('size', 'Size', 0, 1, 1, 0.01);
+            this.addSlider('size', 'Size', 3, 20, 3, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).dotScreen(' + this.center.x + ', ' + this.center.y + ', ' + this.angle + ', ' + this.size + ').update();');
         })

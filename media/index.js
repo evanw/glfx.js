@@ -27,5 +27,5 @@ $(window).load(function() {
     image.onload = function() {
         init(image);
     };
-    image.src = '/glfx.js/media/orange.jpg';
+    image.src = '/glfx.js/media/image.jpg';
 });

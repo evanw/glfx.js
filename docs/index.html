@@ -18,9 +18,11 @@
         <li><a href="http://github.com/evanw/glfx.js">Source Code</a></li>
     </ul>
     <div class="block">
-    <h3>Documentation</h3>
+    <h3>Overview</h3>
+    <p>TODO</p>
 
-    <h4>Quick Start</h4>
+    <h3>Quick Start</h3>
+    <p>This HTML fragment is all you need to use the API. Copy and paste it into an empty index.html document, make sure that directory also contains <a href="/glfx.js/glfx.js">glfx.js</a> and an image named <a href="/glfx.js/media/image.jpg">image.jpg</a>, and open index.html. You should see the image with the ink filter applied.</p>
     <pre>&lt;script src="glfx.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 
@@ -38,40 +40,21 @@ window.onload = function() {
     var texture = canvas.texture(image);
 
     // apply the ink filter
-    canvas.draw(texture).ink(0.5).update();
+    canvas.draw(texture).ink(0.25).update();
 
     // replace the image with the canvas
-    image.parentNode.appendChild(canvas);
+    image.parentNode.insertBefore(canvas);
     image.parentNode.removeChild(image);
 };
 
 &lt;/script&gt;
 &lt;img id="image" src="image.jpg"&gt;</pre>
 
-    <h4>Core API</h4>
+    <h3>Core API</h3>
     <p>TODO</p>
 
-    <h4>Filters</h4>
-    <ul>
-        <li>Adjust<ul>
-            <li>Brightness / Contrast</li>
-            <li>Hue / Saturation</li>
-        </ul></li>
-        <li>Artistic<ul>
-            <li>Dot Screen</li>
-            <li>Ink</li>
-        </ul></li>
-        <li>Blur<ul>
-            <li>Zoom Blur</li>
-        </ul></li>
-        <li>Warp<ul>
-            <li>Bulge / Pinch</li>
-            <li>Matrix Warp</li>
-            <li>Perspective</li>
-            <li>Swirl</li>
-        </ul></li>
-    </ul>
-    <p>TODO</p>
+    <h3>Filters</h3>
+    <div class="doc" id="brightnessContrast"><h4>Brightness / Contrast <small>[<a href="/glfx.js/demo/#brightnessContrast">demo</a>]</small></h4><p><code>canvas.brightnessContrast(brightness, contrast);</code></p><p>Provides additive brightness and multiplicative contrast control.</p><table class="docs"><tr><td><code>brightness</code></td><td>-1 to 1 (-1 is solid black, 0 is no change, and 1 is solid white)</td></tr><tr><td><code>contrast</code></td><td>-1 to 1 (-1 is solid gray, 0 is no change, and 1 is maximum contrast)</td></tr></table></div><div class="doc" id="hueSaturation"><h4>Hue / Saturation <small>[<a href="/glfx.js/demo/#hueSaturation">demo</a>]</small></h4><p><code>canvas.hueSaturation(hue, saturation);</code></p><p>Provides rotational hue and multiplicative saturation control. RGB color space can be imagined as a cube where the axes are the red, green, and blue color values. Hue changing works by rotating the color vector around the grayscale line, which is the straight line from black (0, 0, 0) to white (1, 1, 1). Saturation is implemented by scaling all color channel values either toward or away from the average color channel value.</p><table class="docs"><tr><td><code>hue</code></td><td>-1 to 1 (-1 is 180 degree rotation in the negative direction, 0 is no change, and 1 is 180 degree rotation in the positive direction)</td></tr><tr><td><code>saturation</code></td><td>-1 to 1 (-1 is solid gray, 0 is no change, and 1 is maximum contrast)</td></tr></table></div><div class="doc" id="dotScreen"><h4>Dot Screen <small>[<a href="/glfx.js/demo/#dotScreen">demo</a>]</small></h4><p><code>canvas.dotScreen(centerX, centerY, angle, size);</code></p><p>Simulates a black and white halftone rendering of the image by multiplying pixel values with a rotated 2D sine wave pattern.</p><table class="docs"><tr><td><code>centerX</code></td><td>The x coordinate of the pattern origin.</td></tr><tr><td><code>centerY</code></td><td>The y coordinate of the pattern origin.</td></tr><tr><td><code>angle</code></td><td>The rotation of the pattern in radians.</td></tr><tr><td><code>size</code></td><td>The diameter of a dot in pixels.</td></tr></table></div><div class="doc" id="ink"><h4>Ink <small>[<a href="/glfx.js/demo/#ink">demo</a>]</small></h4><p><code>canvas.ink(strength);</code></p><p>Simulates outlining the image in ink by darkening edges stronger than a certain threshold. The edge detection value is the difference of two copies of the image, each blurred using a blur of a different radius.</p><table class="docs"><tr><td><code>strength</code></td><td>The multiplicative scale of the ink edges. Values in the range 0 to 1 are usually sufficient, where 0 doesn&apos;t change the image and 1 adds lots of black edges. Negative strength values will create white ink edges instead of black ones.</td></tr></table></div><div class="doc" id="zoomBlur"><h4>Zoom Blur <small>[<a href="/glfx.js/demo/#zoomBlur">demo</a>]</small></h4><p><code>canvas.zoomBlur(centerX, centerY, strength);</code></p><p>Blurs the image away from a certain point, which looks like radial motion blur.</p><table class="docs"><tr><td><code>centerX</code></td><td>The x coordinate of the blur origin.</td></tr><tr><td><code>centerY</code></td><td>The y coordinate of the blur origin.</td></tr><tr><td><code>strength</code></td><td>The strength of the blur. Values in the range 0 to 1 are usually sufficient, where 0 doesn&apos;t change the image and 1 creates a highly blurred image.</td></tr></table></div><div class="doc" id="bulgePinch"><h4>Bulge / Pinch <small>[<a href="/glfx.js/demo/#bulgePinch">demo</a>]</small></h4><p><code>canvas.bulgePinch(centerX, centerY, radius, strength);</code></p><p>Bulges or pinches the image in a circle.</p><table class="docs"><tr><td><code>centerX</code></td><td>The x coordinate of the center of the circle of effect.</td></tr><tr><td><code>centerY</code></td><td>The y coordinate of the center of the circle of effect.</td></tr><tr><td><code>radius</code></td><td>The radius of the circle of effect.</td></tr><tr><td><code>strength</code></td><td>-1 to 1 (-1 is strong pinch, 0 is no effect, 1 is strong bulge)</td></tr></table></div><div class="doc" id="matrixWarp"><h4>Matrix Warp <small>[<a href="/glfx.js/demo/#matrixWarp">demo</a>]</small></h4><p><code>canvas.matrixWarp(matrix, inverse);</code></p><p>Transforms an image by a 2x2 or 3x3 matrix. The coordinates used in the transformation are (x, y) for a 2x2 matrix or (x, y, 1) for a 3x3 matrix, where x and y are in units of pixels.</p><table class="docs"><tr><td><code>matrix</code></td><td>A 2x2 or 3x3 matrix represented as either a list or a list of lists. For example, the 3x3 matrix [[2,0,0],[0,3,0],[0,0,1]] can also be represented as [2,0,0,0,3,0,0,0,1] or just [2,0,0,3].</td></tr><tr><td><code>inverse</code></td><td>A boolean value that, when true, applies the inverse transformation instead. (optional, defaults to false)</td></tr></table></div><div class="doc" id="perspective"><h4>Perspective Correction <small>[<a href="/glfx.js/demo/#perspective">demo</a>]</small></h4><p><code>canvas.perspective(before, after);</code></p><p>Warps one quadrangle to another with a perspective transform. This can be used to make a 2D image look 3D or to recover a 2D image captured in a 3D environment.</p><table class="docs"><tr><td><code>before</code></td><td>The x and y coordinates of four points before the transform in a flat list. This would look like [ax, ay, bx, by, cx, cy, dx, dy] for four points (ax, ay), (bx, by), (cx, cy), and (dx, dy).</td></tr><tr><td><code>after</code></td><td>The x and y coordinates of four points after the transform in a flat list, just like the other argument.</td></tr></table></div><div class="doc" id="swirl"><h4>Swirl <small>[<a href="/glfx.js/demo/#swirl">demo</a>]</small></h4><p><code>canvas.swirl(centerX, centerY, radius, angle);</code></p><p>Warps a circular region of the image in a swirl.</p><table class="docs"><tr><td><code>centerX</code></td><td>The x coordinate of the center of the circular region.</td></tr><tr><td><code>centerY</code></td><td>The y coordinate of the center of the circular region.</td></tr><tr><td><code>radius</code></td><td>The radius of the circular region.</td></tr><tr><td><code>angle</code></td><td>The angle in radians that the pixels in the center of the circular region will be rotated by.</td></tr></table></div>
 
     </div>
     <div class="footer">Created by <a href="http://madebyevan.com">Evan Wallace</a> in 2011</div>
