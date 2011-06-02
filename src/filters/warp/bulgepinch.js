@@ -1,3 +1,11 @@
+/**
+ * @filter         Bulge / Pinch
+ * @description    Bulges or pinches the image in a circle.
+ * @param centerX  The x coordinate of the center of the circle of effect.
+ * @param centerY  The y coordinate of the center of the circle of effect.
+ * @param radius   The radius of the circle of effect.
+ * @param strength -1 to 1 (-1 is strong pinch, 0 is no effect, 1 is strong bulge)
+ */
 function bulgePinch(centerX, centerY, radius, strength) {
     gl.bulgePinch = gl.bulgePinch || warpShader('\
         uniform float radius;\
@@ -19,7 +27,7 @@ function bulgePinch(centerX, centerY, radius, strength) {
 
     simpleShader.call(this, gl.bulgePinch, {
         radius: radius,
-        strength: strength,
+        strength: clamp(-1, strength, 1),
         center: [centerX, centerY],
         texSize: [this.width, this.height]
     });

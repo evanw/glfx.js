@@ -1,3 +1,12 @@
+/**
+ * @filter        Swirl
+ * @description   Warps a circular region of the image in a swirl.
+ * @param centerX The x coordinate of the center of the circular region.
+ * @param centerY The y coordinate of the center of the circular region.
+ * @param radius  The radius of the circular region.
+ * @param angle   The angle in radians that the pixels in the center of
+ *                the circular region will be rotated by.
+ */
 function swirl(centerX, centerY, radius, angle) {
     gl.swirl = gl.swirl || warpShader('\
         uniform float radius;\

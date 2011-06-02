@@ -1,3 +1,13 @@
+/**
+ * @filter         Ink
+ * @description    Simulates outlining the image in ink by darkening edges stronger than a
+ *                 certain threshold. The edge detection value is the difference of two
+ *                 copies of the image, each blurred using a blur of a different radius.
+ * @param strength The multiplicative scale of the ink edges. Values in the range 0 to 1
+ *                 are usually sufficient, where 0 doesn't change the image and 1 adds lots
+ *                 of black edges. Negative strength values will create white ink edges
+ *                 instead of black ones.
+ */
 function ink(strength) {
     gl.ink = gl.ink || new Shader(null, '\
         uniform sampler2D texture;\
@@ -24,12 +34,12 @@ function ink(strength) {
                 }\
             }\
             vec3 edge = max(vec3(0.0), bigAverage / bigTotal - smallAverage / smallTotal);\
-            gl_FragColor = vec4(color - dot(edge, edge) * strength * strength * 200.0, 1.0);\
+            gl_FragColor = vec4(color - dot(edge, edge) * strength * 100000.0, 1.0);\
         }\
     ');
 
     simpleShader.call(this, gl.ink, {
-        strength: strength,
+        strength: strength * strength * strength * strength * strength,
         texSize: [this.width, this.height]
     });
 
