@@ -27,7 +27,7 @@ var Texture = (function() {
         }
     }
 
-    Texture.prototype._delete = function() {
+    Texture.prototype.destroy = function() {
         gl.deleteTexture(this.id);
         this.id = null;
     };
@@ -37,12 +37,10 @@ var Texture = (function() {
         gl.bindTexture(gl.TEXTURE_2D, this.id);
     };
 
-    var framebuffer = null;
-
     Texture.prototype.drawTo = function(callback) {
         // start rendering to this texture
-        framebuffer = framebuffer || gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        gl.framebuffer = gl.framebuffer || gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, gl.framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.id, 0);
         gl.viewport(0, 0, this.width, this.height);
 

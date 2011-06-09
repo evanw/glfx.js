@@ -5,16 +5,18 @@ function clamp(lo, value, hi) {
 }
 
 function texture(image) {
-    gl = this.gl;
+    gl = this._.gl;
     return { _: Texture.fromImage(image) };
 }
 
 function initialize(width, height) {
+    if (this._.texture) this._.texture.destroy();
+    if (this._.spareTexture) this._.spareTexture.destroy();
     this.width = width;
     this.height = height;
     this._.texture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
     this._.spareTexture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
-    this._.flippedShader = new Shader(null, '\
+    this._.flippedShader = this._.flippedShader || new Shader(null, '\
         uniform sampler2D texture;\
         uniform vec2 texSize;\
         varying vec2 texCoord;\
@@ -26,9 +28,9 @@ function initialize(width, height) {
 }
 
 function draw(texture) {
-    gl = this.gl;
+    gl = this._.gl;
 
-    if (!this._.isInitialized) {
+    if (!this._.isInitialized || texture._.width != this.width || texture._.height != this.height) {
         initialize.call(this, texture._.width, texture._.height);
     }
 
@@ -41,7 +43,7 @@ function draw(texture) {
 }
 
 function update() {
-    gl = this.gl;
+    gl = this._.gl;
 
     this._.texture.use();
     this._.flippedShader.uniforms({
@@ -52,6 +54,8 @@ function update() {
 }
 
 function simpleShader(shader, uniforms) {
+    gl = this._.gl;
+
     var texture = this._.texture;
     this._.spareTexture.drawTo(function() {
         texture.use();
@@ -69,17 +73,19 @@ function replace(node) {
 exports['canvas'] = function() {
     var canvas = document.createElement('canvas');
     try {
-        canvas.gl = canvas.getContext('experimental-webgl');
+        gl = canvas.getContext('experimental-webgl');
     } catch (e) {
-        canvas.gl = null;
+        gl = null;
     }
-    if (!canvas.gl) {
+    if (!gl) {
         throw 'This browser does not support WebGL';
     }
     canvas._ = {
+        gl: gl,
         isInitialized: false,
         texture: null,
-        spareTexture: null
+        spareTexture: null,
+        flippedShader: null
     };
     canvas['texture'] = texture;
     canvas['draw'] = draw;

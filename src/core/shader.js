@@ -37,7 +37,6 @@ var Shader = (function() {
         this.vertexAttribute = null;
         this.texCoordAttribute = null;
         this.program = gl.createProgram();
-        this.isZombie = false;
         vertexSource = vertexSource || defaultVertexSource;
         fragmentSource = fragmentSource || defaultFragmentSource;
         fragmentSource = 'precision highp float;' + fragmentSource; // annoying requirement is annoying
@@ -49,14 +48,12 @@ var Shader = (function() {
         }
     }
 
-    Shader.prototype._delete = function() {
+    Shader.prototype.destroy = function() {
         gl.deleteProgram(this.program);
         this.program = null;
-        this.isZombie = true;
     };
 
     Shader.prototype.uniforms = function(uniforms) {
-        if (this.isZombie) throw 'attempted to use a shader after deleting it';
         gl.useProgram(this.program);
         for (var name in uniforms) {
             if (!uniforms.hasOwnProperty(name)) continue;
@@ -86,7 +83,6 @@ var Shader = (function() {
     // textures are uniforms too but for some reason can't be specified by gl.uniform1f,
     // even though floating point numbers represent the integers 0 through 7 exactly
     Shader.prototype.textures = function(textures) {
-        if (this.isZombie) throw 'attempted to use a shader after deleting it';
         gl.useProgram(this.program);
         for (var name in textures) {
             if (!textures.hasOwnProperty(name)) continue;
@@ -96,25 +92,21 @@ var Shader = (function() {
         return this;
     };
 
-    var vertexBuffer = null;
-    var texCoordBuffer = null;
-
     Shader.prototype.drawRect = function(left, top, right, bottom) {
-        if (this.isZombie) throw 'attempted to use a shader after deleting it';
         var undefined;
         var viewport = gl.getParameter(gl.VIEWPORT);
         top = top !== undefined ? (top - viewport[1]) / viewport[3] : 0;
         left = left !== undefined ? (left - viewport[0]) / viewport[2] : 0;
         right = right !== undefined ? (right - viewport[0]) / viewport[2] : 1;
         bottom = bottom !== undefined ? (bottom - viewport[1]) / viewport[3] : 1;
-        if (vertexBuffer == null) {
-            vertexBuffer = gl.createBuffer();
+        if (gl.vertexBuffer == null) {
+            gl.vertexBuffer = gl.createBuffer();
         }
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ left, top, left, bottom, right, top, right, bottom ]), gl.STATIC_DRAW);
-        if (texCoordBuffer == null) {
-            texCoordBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        if (gl.texCoordBuffer == null) {
+            gl.texCoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, gl.texCoordBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 0, 1, 1, 0, 1, 1 ]), gl.STATIC_DRAW);
         }
         if (this.vertexAttribute == null) {
@@ -126,9 +118,9 @@ var Shader = (function() {
             gl.enableVertexAttribArray(this.texCoordAttribute);
         }
         gl.useProgram(this.program);
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
         gl.vertexAttribPointer(this.vertexAttribute, 2, gl.FLOAT, false, 0, 0);
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.texCoordBuffer);
         gl.vertexAttribPointer(this.texCoordAttribute, 2, gl.FLOAT, false, 0, 0);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };

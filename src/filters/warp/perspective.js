@@ -1,5 +1,5 @@
 /**
- * @filter       Perspective Correction
+ * @filter       Perspective
  * @description  Warps one quadrangle to another with a perspective transform. This can be used to
  *               make a 2D image look 3D or to recover a 2D image captured in a 3D environment.
  * @param before The x and y coordinates of four points before the transform in a flat list. This
