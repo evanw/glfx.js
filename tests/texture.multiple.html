@@ -1,0 +1,25 @@
+<script src="http://evanw.github.com/glfx.js/glfx.js"></script>
+<script>
+
+var canvas;
+var texture;
+var textureA;
+var textureB;
+
+function toggle() {
+    texture = (texture == textureA) ? textureB : textureA;
+    canvas.draw(texture).ink(0.25).update();
+}
+
+window.onload = function() {
+    canvas = fx.canvas();
+    document.body.appendChild(canvas);
+    textureA = canvas.texture(document.getElementById('imageA'));
+    textureB = canvas.texture(document.getElementById('imageB'));
+    setInterval(toggle, 500);
+};
+
+</script>
+<img id="imageA" src="image.jpg">
+<img id="imageB" src="cs224.jpg">
+<p>This tests the ability to make more than one texture simultaneously. The canvas below should toggle between the two images above and should always have the ink filter applied.</p>

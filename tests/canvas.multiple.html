@@ -1,0 +1,26 @@
+<script src="http://evanw.github.com/glfx.js/glfx.js"></script>
+<script>
+
+function init(imageID) {
+    var canvas = fx.canvas();
+    var image = document.getElementById(imageID);
+    var texture = canvas.texture(image);
+    document.body.appendChild(canvas);
+	return { canvas: canvas, texture: texture };
+}
+
+window.onload = function() {
+    var a = init('imageA');
+    var b = init('imageB');
+    a.canvas.draw(a.texture);
+    b.canvas.draw(b.texture);
+    a.canvas.ink(0.25);
+    b.canvas.ink(0.25);
+    a.canvas.update();
+    b.canvas.update();
+};
+
+</script>
+<img id="imageA" src="image.jpg">
+<img id="imageB" src="yosemite.jpg">
+<p>This tests the ability to make more than one canvas simultaneously. There should be a copy of each image below, and each copy should have the ink filter applied.</p>

@@ -5,7 +5,6 @@ function clamp(lo, value, hi) {
 }
 
 function texture(image) {
-    gl = this._.gl;
     return { _: Texture.fromImage(image) };
 }
 
@@ -28,8 +27,6 @@ function initialize(width, height) {
 }
 
 function draw(texture) {
-    gl = this._.gl;
-
     if (!this._.isInitialized || texture._.width != this.width || texture._.height != this.height) {
         initialize.call(this, texture._.width, texture._.height);
     }
@@ -43,8 +40,6 @@ function draw(texture) {
 }
 
 function update() {
-    gl = this._.gl;
-
     this._.texture.use();
     this._.flippedShader.uniforms({
         texSize: [this._.texture.width, this._.texture.height]
@@ -54,8 +49,6 @@ function update() {
 }
 
 function simpleShader(shader, uniforms) {
-    gl = this._.gl;
-
     var texture = this._.texture;
     this._.spareTexture.drawTo(function() {
         texture.use();
@@ -68,6 +61,16 @@ function replace(node) {
     node.parentNode.insertBefore(this, node);
     node.parentNode.removeChild(node);
     return this;
+}
+
+function wrap(func) {
+    return function() {
+        // Make sure that we're using the correct global WebGL context
+        gl = this._.gl;
+
+        // Now that the context has been switched, we can call the wrapped function
+        return func.apply(this, arguments);
+    };
 }
 
 exports['canvas'] = function() {
@@ -87,18 +90,18 @@ exports['canvas'] = function() {
         spareTexture: null,
         flippedShader: null
     };
-    canvas['texture'] = texture;
-    canvas['draw'] = draw;
-    canvas['update'] = update;
-    canvas['replace'] = replace;
-    canvas['brightnessContrast'] = brightnessContrast;
-    canvas['hueSaturation'] = hueSaturation;
-    canvas['perspective'] = perspective;
-    canvas['matrixWarp'] = matrixWarp;
-    canvas['bulgePinch'] = bulgePinch;
-    canvas['dotScreen'] = dotScreen;
-    canvas['zoomBlur'] = zoomBlur;
-    canvas['swirl'] = swirl;
-    canvas['ink'] = ink;
+    canvas['texture'] = wrap(texture);
+    canvas['draw'] = wrap(draw);
+    canvas['update'] = wrap(update);
+    canvas['replace'] = wrap(replace);
+    canvas['brightnessContrast'] = wrap(brightnessContrast);
+    canvas['hueSaturation'] = wrap(hueSaturation);
+    canvas['perspective'] = wrap(perspective);
+    canvas['matrixWarp'] = wrap(matrixWarp);
+    canvas['bulgePinch'] = wrap(bulgePinch);
+    canvas['dotScreen'] = wrap(dotScreen);
+    canvas['zoomBlur'] = wrap(zoomBlur);
+    canvas['swirl'] = wrap(swirl);
+    canvas['ink'] = wrap(ink);
     return canvas;
 };
