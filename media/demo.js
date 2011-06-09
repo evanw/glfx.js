@@ -2,8 +2,9 @@
 // Filter object
 ////////////////////////////////////////////////////////////////////////////////
 
-function Filter(name, init, update) {
+function Filter(name, func, init, update) {
     this.name = name;
+    this.func = func;
     this.update = update;
     this.sliders = [];
     this.nubs = [];
@@ -70,6 +71,9 @@ Filter.prototype.use = function() {
         this[nub.name] = { x: x, y: y };
     }
 
+    // Provide a link to the documentation
+    $('<tr><th></th><td><br>See the documentation for <kbd><a href="/glfx.js/docs/#' + this.func + '">' + this.func + '()</a></kbd> for more information.</td></tr>').appendTo(tbody);
+
     this.update();
 };
 
@@ -122,6 +126,28 @@ function init(image) {
         switchToFilter(select.selectedIndex);
     });
     switchToFilter(1);
+
+    // Allow the URL hash to jump to a specific demo
+    var hash;
+    function checkHash() {
+        if (location.hash == hash) return;
+        hash = location.hash;
+        console.log(hash);
+        var index = 0;
+        for (var category in filters) {
+            index++;
+            var list = filters[category];
+            for (var i = 0; i < list.length; i++) {
+                if ('#' + list[i].func == hash) {
+                    switchToFilter(index);
+                    break;
+                }
+                index++;
+            }
+        }
+    }
+    checkHash();
+    setInterval(checkHash, 100);
 }
 
 $(window).load(function() {
@@ -138,13 +164,13 @@ $(window).load(function() {
 
 var filters = {
     'Adjust': [
-        new Filter('Brightness / Contrast', function() {
+        new Filter('Brightness / Contrast', 'brightnessContrast', function() {
             this.addSlider('brightness', 'Brightness', -1, 1, 0, 0.01);
             this.addSlider('contrast', 'Contrast', -1, 1, 0, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).brightnessContrast(' + this.brightness + ', ' + this.contrast + ').update();');
         }),
-        new Filter('Hue / Saturation', function() {
+        new Filter('Hue / Saturation', 'hueSaturation', function() {
             this.addSlider('hue', 'Hue', -1, 1, 0, 0.01);
             this.addSlider('saturation', 'Saturation', -1, 1, 0, 0.01);
         }, function() {
@@ -152,7 +178,7 @@ var filters = {
         })
     ],
     'Blur': [
-        new Filter('Zoom Blur', function() {
+        new Filter('Zoom Blur', 'zoomBlur', function() {
             this.addNub('center', 0.5, 0.5);
             this.addSlider('strength', 'Strength', 0, 1, 0.3, 0.01);
         }, function() {
@@ -160,21 +186,21 @@ var filters = {
         })
     ],
     'Warp': [
-        new Filter('Swirl', function() {
+        new Filter('Swirl', 'swirl', function() {
             this.addNub('center', 0.5, 0.5);
             this.addSlider('angle', 'Angle', -25, 25, 6, 0.1);
             this.addSlider('radius', 'Radius', 0, 600, 200, 1);
         }, function() {
             this.setCode('canvas.draw(texture).swirl(' + this.center.x + ', ' + this.center.y + ', ' + this.radius + ', ' + this.angle + ').update();');
         }),
-        new Filter('Bulge / Pinch', function() {
+        new Filter('Bulge / Pinch', 'bulgePinch', function() {
             this.addNub('center', 0.5, 0.5);
             this.addSlider('strength', 'Strength', -1, 1, 1, 0.01);
             this.addSlider('radius', 'Radius', 0, 600, 200, 1);
         }, function() {
             this.setCode('canvas.draw(texture).bulgePinch(' + this.center.x + ', ' + this.center.y + ', ' + this.radius + ', ' + this.strength + ').update();');
         }),
-        new Filter('Perspective', function() {
+        new Filter('Perspective', 'perspective', function() {
             this.addNub('a', 0.25, 0.25);
             this.addNub('b', 0.75, 0.25);
             this.addNub('c', 0.25, 0.75);
@@ -188,12 +214,12 @@ var filters = {
         })
     ],
     'Artistic': [
-        new Filter('Ink', function() {
+        new Filter('Ink', 'ink', function() {
             this.addSlider('strength', 'Strength', 0, 1, 0.25, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).ink(' + this.strength + ').update();');
         }),
-        new Filter('Dot Screen', function() {
+        new Filter('Dot Screen', 'dotScreen', function() {
             this.addNub('center', 0.5, 0.5);
             this.addSlider('angle', 'Angle', 0, Math.PI / 2, 1.1, 0.01);
             this.addSlider('size', 'Size', 3, 20, 3, 0.01);

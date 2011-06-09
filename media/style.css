@@ -1,5 +1,5 @@
 a { color: inherit; }
-pre, code { font: 15px/17px Inconsolata, monospace; }
+pre, code, kbd { font: 15px/17px Inconsolata, monospace; }
 pre { background: #BFBFBF; padding: 10px; margin: 20px 0; }
 #code { display: block; padding-left: 2em; text-indent: -2em; }
 body { margin: 0 auto; padding: 0 30px; max-width: 1000px; font: 15px/20px Arial, sans-serif; background: #3F3F3F; color: #DDD; }
@@ -131,13 +131,15 @@ h2 {
 }
 
 p, h3, h4 { margin: 0; padding: 20px 0 0 0; }
+ul { margin: 0; padding-top: 20px; padding-bottom: 0; }
 h3 { text-align: center; font-size: 30px; text-shadow: 0 1px 0 white; padding: 20px 0; }
 * + h3 { padding-top: 60px; }
-h4 { font-size: 25px; text-shadow: 0 1px 0 white; padding: 0; }
+h4 { font-size: 25px; text-shadow: 0 1px 0 white; }
+.doc h4 { padding: 0; }
 h4 small { font-size: 15px; position: relative; left: 10px; top: -3px; }
 
 .doc { padding: 30px; margin: 0 -30px; }
-.doc:target { background: #EFEFEF; }
+.doc:target { background: white; }
 
 .block {
     margin: 0 0 20px 0;
