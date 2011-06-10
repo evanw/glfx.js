@@ -132,7 +132,6 @@ function init(image) {
     function checkHash() {
         if (location.hash == hash) return;
         hash = location.hash;
-        console.log(hash);
         var index = 0;
         for (var category in filters) {
             index++;
@@ -183,19 +182,32 @@ var filters = {
             this.addSlider('strength', 'Strength', 0, 1, 0.3, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).zoomBlur(' + this.center.x + ', ' + this.center.y + ', ' + this.strength + ').update();');
+        }),
+        new Filter('Triangle Blur', 'triangleBlur', function() {
+            this.addSlider('radius', 'Radius', 0, 200, 50, 1);
+        }, function() {
+            this.setCode('canvas.draw(texture).triangleBlur(' + this.radius + ').update();');
+        }),
+        new Filter('Tilt Shift', 'tiltShift', function() {
+            this.addNub('start', 0.15, 0.75);
+            this.addNub('end', 0.75, 0.6);
+            this.addSlider('blurRadius', 'Blur Radius', 0, 50, 10, 1);
+            this.addSlider('gradientRadius', 'Gradient Radius', 0, 400, 200, 1);
+        }, function() {
+            this.setCode('canvas.draw(texture).tiltShift(' + this.start.x + ', ' + this.start.y + ', ' + this.end.x + ', ' + this.end.y + ', ' + this.blurRadius + ', ' + this.gradientRadius + ').update();');
         })
     ],
     'Warp': [
         new Filter('Swirl', 'swirl', function() {
             this.addNub('center', 0.5, 0.5);
-            this.addSlider('angle', 'Angle', -25, 25, 6, 0.1);
+            this.addSlider('angle', 'Angle', -25, 25, 3, 0.1);
             this.addSlider('radius', 'Radius', 0, 600, 200, 1);
         }, function() {
             this.setCode('canvas.draw(texture).swirl(' + this.center.x + ', ' + this.center.y + ', ' + this.radius + ', ' + this.angle + ').update();');
         }),
         new Filter('Bulge / Pinch', 'bulgePinch', function() {
             this.addNub('center', 0.5, 0.5);
-            this.addSlider('strength', 'Strength', -1, 1, 1, 0.01);
+            this.addSlider('strength', 'Strength', -1, 1, 0.5, 0.01);
             this.addSlider('radius', 'Radius', 0, 600, 200, 1);
         }, function() {
             this.setCode('canvas.draw(texture).bulgePinch(' + this.center.x + ', ' + this.center.y + ', ' + this.radius + ', ' + this.strength + ').update();');
@@ -225,6 +237,13 @@ var filters = {
             this.addSlider('size', 'Size', 3, 20, 3, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).dotScreen(' + this.center.x + ', ' + this.center.y + ', ' + this.angle + ', ' + this.size + ').update();');
+        }),
+        new Filter('Color Halftone', 'colorHalftone', function() {
+            this.addNub('center', 0.5, 0.5);
+            this.addSlider('angle', 'Angle', 0, Math.PI / 2, 1.1, 0.01);
+            this.addSlider('size', 'Size', 3, 20, 4, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).colorHalftone(' + this.center.x + ', ' + this.center.y + ', ' + this.angle + ', ' + this.size + ').update();');
         })
     ]
 };

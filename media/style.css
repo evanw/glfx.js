@@ -196,7 +196,7 @@ h4 small { font-size: 15px; position: relative; left: 10px; top: -3px; }
 
 .placeholder { text-align: center; padding: 40px 0 20px 0; font-size: 12px; }
 .placeholder .container {
-    position: relative; width: 640px; height: 427px; background: #BFBFBF; display: inline-block; line-height: 427px; overflow: hidden;
+    position: relative; width: 640px; height: 479px; background: #BFBFBF; display: inline-block; line-height: 479px; overflow: hidden;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEW/v7////+Zw/90AAAAEUlEQVQI12P4z8CAFWEX/Q8Afr8P8erzE9cAAAAASUVORK5CYII=);
     border: 1px solid black;
     box-shadow: 0 0 3px black;
