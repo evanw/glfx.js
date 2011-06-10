@@ -15,18 +15,21 @@ function dotScreen(centerX, centerY, angle, size) {
         uniform float scale;\
         uniform vec2 texSize;\
         varying vec2 texCoord;\
-        void main() {\
-            vec3 color = texture2D(texture, texCoord).rgb;\
+        \
+        float pattern() {\
             float s = sin(angle), c = cos(angle);\
             vec2 tex = texCoord * texSize - center;\
             vec2 point = vec2(\
                 c * tex.x - s * tex.y,\
                 s * tex.x + c * tex.y\
             ) * scale;\
-            float weight = (sin(point.x) * sin(point.y)) * 2.0;\
+            return (sin(point.x) * sin(point.y)) * 4.0;\
+        }\
+        \
+        void main() {\
+            vec3 color = texture2D(texture, texCoord).rgb;\
             float average = (color.r + color.g + color.b) / 3.0;\
-            color = vec3(average + (average - 0.6) * 4.0 + weight);\
-            gl_FragColor = vec4(color, 1.0);\
+            gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), 1.0);\
         }\
     ');
 
