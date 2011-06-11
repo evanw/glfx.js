@@ -107,6 +107,7 @@ exports['canvas'] = function() {
     canvas['bulgePinch'] = wrap(bulgePinch);
     canvas['tiltShift'] = wrap(tiltShift);
     canvas['dotScreen'] = wrap(dotScreen);
+    canvas['edgeWork'] = wrap(edgeWork);
     canvas['lensBlur'] = wrap(lensBlur);
     canvas['zoomBlur'] = wrap(zoomBlur);
     canvas['swirl'] = wrap(swirl);
