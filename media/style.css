@@ -203,6 +203,7 @@ h4 small { font-size: 15px; position: relative; left: 10px; top: -3px; }
     -moz-box-shadow: 0 0 3px black;
     -webkit-box-shadow: 0 0 3px black;
 }
+.placeholder .label { line-height: 14px; padding-top: 5px; }
 #placeholder { background: rgba(0, 0, 0, 0.8); border-radius: 30px; padding: 5px 17px; color: white; font-weight: bold; }
 canvas { vertical-align: top; }
 

@@ -191,10 +191,15 @@ var filters = {
         new Filter('Tilt Shift', 'tiltShift', function() {
             this.addNub('start', 0.15, 0.75);
             this.addNub('end', 0.75, 0.6);
-            this.addSlider('blurRadius', 'Blur Radius', 0, 50, 10, 1);
+            this.addSlider('blurRadius', 'Blur Radius', 0, 50, 15, 1);
             this.addSlider('gradientRadius', 'Gradient Radius', 0, 400, 200, 1);
         }, function() {
             this.setCode('canvas.draw(texture).tiltShift(' + this.start.x + ', ' + this.start.y + ', ' + this.end.x + ', ' + this.end.y + ', ' + this.blurRadius + ', ' + this.gradientRadius + ').update();');
+        }),
+        new Filter('Lens Blur', 'lensBlur', function() {
+            this.addSlider('radius', 'Radius', 0, 20, 10, 1);
+        }, function() {
+            this.setCode('canvas.draw(texture).lensBlur(' + this.radius + ').update();');
         })
     ],
     'Warp': [
@@ -225,11 +230,17 @@ var filters = {
             this.setCode('canvas.draw(texture).perspective([' + before + '], [' + after + ']).update();');
         })
     ],
-    'Artistic': [
+    'Fun': [
         new Filter('Ink', 'ink', function() {
             this.addSlider('strength', 'Strength', 0, 1, 0.25, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).ink(' + this.strength + ').update();');
+        }),
+        new Filter('Hexagonal Pixelate', 'hexagonalPixelate', function() {
+            this.addNub('center', 0.5, 0.5);
+            this.addSlider('scale', 'Scale', 10, 100, 20, 1);
+        }, function() {
+            this.setCode('canvas.draw(texture).hexagonalPixelate(' + this.center.x + ', ' + this.center.y + ', ' + this.scale + ').update();');
         }),
         new Filter('Dot Screen', 'dotScreen', function() {
             this.addNub('center', 0.5, 0.5);
