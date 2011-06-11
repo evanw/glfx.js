@@ -9,12 +9,15 @@ function texture(image) {
 }
 
 function initialize(width, height) {
+    // Go for floating point buffer textures if we can, it'll make the bokeh filter look a lot better
+    var type = gl.getExtension('OES_texture_float') ? gl.FLOAT : gl.UNSIGNED_BYTE;
+
     if (this._.texture) this._.texture.destroy();
     if (this._.spareTexture) this._.spareTexture.destroy();
     this.width = width;
     this.height = height;
-    this._.texture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
-    this._.spareTexture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
+    this._.texture = new Texture(width, height, gl.RGBA, type);
+    this._.spareTexture = new Texture(width, height, gl.RGBA, type);
     this._.flippedShader = this._.flippedShader || new Shader(null, '\
         uniform sampler2D texture;\
         uniform vec2 texSize;\
@@ -95,6 +98,7 @@ exports['canvas'] = function() {
     canvas['update'] = wrap(update);
     canvas['replace'] = wrap(replace);
     canvas['brightnessContrast'] = wrap(brightnessContrast);
+    canvas['hexagonalPixelate'] = wrap(hexagonalPixelate);
     canvas['hueSaturation'] = wrap(hueSaturation);
     canvas['colorHalftone'] = wrap(colorHalftone);
     canvas['triangleBlur'] = wrap(triangleBlur);
@@ -103,6 +107,7 @@ exports['canvas'] = function() {
     canvas['bulgePinch'] = wrap(bulgePinch);
     canvas['tiltShift'] = wrap(tiltShift);
     canvas['dotScreen'] = wrap(dotScreen);
+    canvas['lensBlur'] = wrap(lensBlur);
     canvas['zoomBlur'] = wrap(zoomBlur);
     canvas['swirl'] = wrap(swirl);
     canvas['ink'] = wrap(ink);

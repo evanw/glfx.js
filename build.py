@@ -31,8 +31,7 @@ def compress_glsl(text):
             text = re.sub(r' ?(\+|\-|\*|/|,|=|{|}|;|\(|\)|<|>|!|\'|\") ?', r'\1', text) # tighten spaces around some tokens
         return text
 
-    text = re.sub(r"'([^'\\]|\\(.|\n))*'", compress, text) # replace all single-quoted strings
-    text = re.sub(r'"([^"\\]|\\(.|\n))*"', compress, text) # replace all double-quoted strings
+    text = re.sub(r"('([^'\\]|\\(.|\n))*'|\"([^\"\\]|\\(.|\n))*\")", compress, text) # replace all strings
     return text
 
 def build():

@@ -25,13 +25,7 @@ function tiltShift(startX, startY, endX, endY, blurRadius, gradientRadius) {
         uniform vec2 delta;\
         uniform vec2 texSize;\
         varying vec2 texCoord;\
-        \
-        /* random number between 0 and 1 */\
-        float random(vec3 scale, float seed) {\
-            /* use the fragment position for randomness */\
-            return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\
-        }\
-        \
+        ' + randomShaderFunc + '\
         void main() {\
             vec3 color = vec3(0.0);\
             float total = 0.0;\

@@ -28,7 +28,6 @@ function colorHalftone(centerX, centerY, angle, size) {
         }\
         \
         void main() {\
-            /* cyan: 0.26179, magenta: 1.30899, yellow: 0.0, black: 0.78539 */\
             vec3 color = texture2D(texture, texCoord).rgb;\
             vec3 cmy = 1.0 - color;\
             float k = min(cmy.x, min(cmy.y, cmy.z));\
@@ -38,15 +37,6 @@ function colorHalftone(centerX, centerY, angle, size) {
             gl_FragColor = vec4(1.0 - cmy - k, 1.0);\
         }\
     ');
-
-    // /* cyan: 0.26179, magenta: 1.30899, yellow: 0.0, black: 0.78539 */\
-    // vec3 color = texture2D(texture, texCoord).rgb;\
-    // vec3 cmy = 1.0 - color;\
-    // float k = min(cmy.x, min(cmy.y, cmy.z));\
-    // cmy = (cmy - k) / (1.0 - k);\
-    // cmy = clamp(cmy - 0.25 + cmy * vec3(pattern(angle + 0.26179), pattern(angle + 1.30899), pattern(angle)), 0.0, 1.0);\
-    // k = clamp(k - 0.25 + k * pattern(angle + 0.78539), 0.0, 1.0);\
-    // gl_FragColor = vec4(1.0 - cmy - k, 1.0);\
 
     simpleShader.call(this, gl.colorHalftone, {
         center: [centerX, centerY],
