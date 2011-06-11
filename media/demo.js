@@ -35,7 +35,7 @@ Filter.prototype.use = function() {
     // Add a row for each slider
     for (var i = 0; i < this.sliders.length; i++) {
         var slider = this.sliders[i];
-        $('<tr><th>' + slider.label + ':</th><td><div id="slider' + i + '"></div></td></tr>').appendTo(tbody);
+        $('<tr><th>' + slider.label.replace(/ /g, '&nbsp;') + ':</th><td><div id="slider' + i + '"></div></td></tr>').appendTo(tbody);
         var onchange = (function(this_, slider) { return function(event, ui) {
             this_[slider.name] = ui.value;
             this_.update();
@@ -198,8 +198,9 @@ var filters = {
         }),
         new Filter('Lens Blur', 'lensBlur', function() {
             this.addSlider('radius', 'Radius', 0, 20, 10, 1);
+            this.addSlider('brightness', 'Brightness', -1, 1, 0.75, 0.01);
         }, function() {
-            this.setCode('canvas.draw(texture).lensBlur(' + this.radius + ').update();');
+            this.setCode('canvas.draw(texture).lensBlur(' + this.radius + ', ' + this.brightness + ').update();');
         })
     ],
     'Warp': [
@@ -235,6 +236,11 @@ var filters = {
             this.addSlider('strength', 'Strength', 0, 1, 0.25, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).ink(' + this.strength + ').update();');
+        }),
+        new Filter('Edge Work', 'edgeWork', function() {
+            this.addSlider('radius', 'Radius', 0, 200, 10, 1);
+        }, function() {
+            this.setCode('canvas.draw(texture).edgeWork(' + this.radius + ').update();');
         }),
         new Filter('Hexagonal Pixelate', 'hexagonalPixelate', function() {
             this.addNub('center', 0.5, 0.5);
