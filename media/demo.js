@@ -257,7 +257,7 @@ var filters = {
         }),
         new Filter('Color Halftone', 'colorHalftone', function() {
             this.addNub('center', 0.5, 0.5);
-            this.addSlider('angle', 'Angle', 0, Math.PI / 2, 1.1, 0.01);
+            this.addSlider('angle', 'Angle', 0, Math.PI / 2, 0.25, 0.01);
             this.addSlider('size', 'Size', 3, 20, 4, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).colorHalftone(' + this.center.x + ', ' + this.center.y + ', ' + this.angle + ', ' + this.size + ').update();');
