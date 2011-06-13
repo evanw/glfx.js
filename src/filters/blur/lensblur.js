@@ -7,6 +7,9 @@
  *                   implementation because it uses bilinear filtering to perform four texture lookups
  *                   simultaneously. Each blur of a different radius needs to compile a separate shader
  *                   on first use, which takes a noticable amount of time to compile for larger radii.
+ *                   This filter makes use of the floating point texture WebGL extension to implement
+ *                   the brightness parameter, so there will be severe visual artifacts if brightness
+ *                   is non-zero and the floating point texture extension is not available.
  * @param radius     1 to 20 (the radius of the circular disk convolved with the image)
  * @param brightness -1 to 1 (the brightness of the bokeh, negative values will create dark bokeh)
  */

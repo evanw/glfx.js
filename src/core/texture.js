@@ -9,7 +9,6 @@ var Texture = (function() {
 
     Texture.fromImage = function(image) {
         var texture = new Texture(image.width, image.height, gl.RGBA, gl.UNSIGNED_BYTE);
-        initTexture(texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
         return texture;
     };

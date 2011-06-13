@@ -1,0 +1,17 @@
+<script src="http://evanw.github.com/glfx.js/glfx.js"></script>
+<script>
+
+window.onload = function() {
+    var canvas = fx.canvas();
+    var image = document.getElementById('image');
+    var texture = canvas.texture(image);
+    document.body.appendChild(canvas);
+    canvas.draw(texture).swirl(canvas.width / 2, canvas.height / 2, 250, 3).update();
+    texture.destroy();
+    texture = canvas.contents();
+    canvas.draw(texture).ink(0.25).update();
+};
+
+</script>
+<img id="image" src="image.jpg">
+<p>This tests the usage of <code>canvas.contents()</code>. The image below should be the image above after applying the swirl filter followed by the ink filter.</p>

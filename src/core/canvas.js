@@ -4,8 +4,15 @@ function clamp(lo, value, hi) {
     return Math.max(lo, Math.min(value, hi));
 }
 
+function wrapTexture(texture) {
+    return {
+        _: texture,
+        destroy: function() { this._.destroy(); }
+    };
+}
+
 function texture(image) {
-    return { _: Texture.fromImage(image) };
+    return wrapTexture(Texture.fromImage(image));
 }
 
 function initialize(width, height) {
@@ -34,8 +41,8 @@ function draw(texture) {
         initialize.call(this, texture._.width, texture._.height);
     }
 
+    texture._.use();
     this._.texture.drawTo(function() {
-        texture._.use();
         Shader.getDefaultShader().drawRect();
     });
 
@@ -52,18 +59,26 @@ function update() {
 }
 
 function simpleShader(shader, uniforms) {
-    var texture = this._.texture;
+    this._.texture.use();
     this._.spareTexture.drawTo(function() {
-        texture.use();
         shader.uniforms(uniforms).drawRect();
     });
-    this._.spareTexture.swapWith(texture);
+    this._.spareTexture.swapWith(this._.texture);
 }
 
 function replace(node) {
     node.parentNode.insertBefore(this, node);
     node.parentNode.removeChild(node);
     return this;
+}
+
+function contents() {
+    var texture = new Texture(this._.texture.width, this._.texture.height, gl.RGBA, gl.UNSIGNED_BYTE);
+    this._.texture.use();
+    texture.drawTo(function() {
+        Shader.getDefaultShader().drawRect();
+    });
+    return wrapTexture(texture);
 }
 
 function wrap(func) {
@@ -93,24 +108,30 @@ exports['canvas'] = function() {
         spareTexture: null,
         flippedShader: null
     };
-    canvas['texture'] = wrap(texture);
-    canvas['draw'] = wrap(draw);
-    canvas['update'] = wrap(update);
-    canvas['replace'] = wrap(replace);
-    canvas['brightnessContrast'] = wrap(brightnessContrast);
-    canvas['hexagonalPixelate'] = wrap(hexagonalPixelate);
-    canvas['hueSaturation'] = wrap(hueSaturation);
-    canvas['colorHalftone'] = wrap(colorHalftone);
-    canvas['triangleBlur'] = wrap(triangleBlur);
-    canvas['perspective'] = wrap(perspective);
-    canvas['matrixWarp'] = wrap(matrixWarp);
-    canvas['bulgePinch'] = wrap(bulgePinch);
-    canvas['tiltShift'] = wrap(tiltShift);
-    canvas['dotScreen'] = wrap(dotScreen);
-    canvas['edgeWork'] = wrap(edgeWork);
-    canvas['lensBlur'] = wrap(lensBlur);
-    canvas['zoomBlur'] = wrap(zoomBlur);
-    canvas['swirl'] = wrap(swirl);
-    canvas['ink'] = wrap(ink);
+
+    // Core methods
+    canvas.texture = wrap(texture);
+    canvas.draw = wrap(draw);
+    canvas.update = wrap(update);
+    canvas.replace = wrap(replace);
+    canvas.contents = wrap(contents);
+
+    // Filter methods
+    canvas.brightnessContrast = wrap(brightnessContrast);
+    canvas.hexagonalPixelate = wrap(hexagonalPixelate);
+    canvas.hueSaturation = wrap(hueSaturation);
+    canvas.colorHalftone = wrap(colorHalftone);
+    canvas.triangleBlur = wrap(triangleBlur);
+    canvas.perspective = wrap(perspective);
+    canvas.matrixWarp = wrap(matrixWarp);
+    canvas.bulgePinch = wrap(bulgePinch);
+    canvas.tiltShift = wrap(tiltShift);
+    canvas.dotScreen = wrap(dotScreen);
+    canvas.edgeWork = wrap(edgeWork);
+    canvas.lensBlur = wrap(lensBlur);
+    canvas.zoomBlur = wrap(zoomBlur);
+    canvas.swirl = wrap(swirl);
+    canvas.ink = wrap(ink);
+
     return canvas;
 };

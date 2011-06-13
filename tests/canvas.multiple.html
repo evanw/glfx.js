@@ -6,7 +6,7 @@ function init(imageID) {
     var image = document.getElementById(imageID);
     var texture = canvas.texture(image);
     document.body.appendChild(canvas);
-	return { canvas: canvas, texture: texture };
+    return { canvas: canvas, texture: texture };
 }
 
 window.onload = function() {
