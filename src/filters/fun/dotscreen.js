@@ -27,9 +27,9 @@ function dotScreen(centerX, centerY, angle, size) {
         }\
         \
         void main() {\
-            vec3 color = texture2D(texture, texCoord).rgb;\
+            vec4 color = texture2D(texture, texCoord);\
             float average = (color.r + color.g + color.b) / 3.0;\
-            gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), 1.0);\
+            gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);\
         }\
     ');
 

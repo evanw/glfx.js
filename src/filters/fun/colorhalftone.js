@@ -28,13 +28,13 @@ function colorHalftone(centerX, centerY, angle, size) {
         }\
         \
         void main() {\
-            vec3 color = texture2D(texture, texCoord).rgb;\
-            vec3 cmy = 1.0 - color;\
+            vec4 color = texture2D(texture, texCoord);\
+            vec3 cmy = 1.0 - color.rgb;\
             float k = min(cmy.x, min(cmy.y, cmy.z));\
             cmy = (cmy - k) / (1.0 - k);\
             cmy = clamp(cmy * 10.0 - 3.0 + vec3(pattern(angle + 0.26179), pattern(angle + 1.30899), pattern(angle)), 0.0, 1.0);\
             k = clamp(k * 10.0 - 5.0 + pattern(angle + 0.78539), 0.0, 1.0);\
-            gl_FragColor = vec4(1.0 - cmy - k, 1.0);\
+            gl_FragColor = vec4(1.0 - cmy - k, color.a);\
         }\
     ');
 

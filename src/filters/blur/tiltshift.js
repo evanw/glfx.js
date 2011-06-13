@@ -27,7 +27,7 @@ function tiltShift(startX, startY, endX, endY, blurRadius, gradientRadius) {
         varying vec2 texCoord;\
         ' + randomShaderFunc + '\
         void main() {\
-            vec3 color = vec3(0.0);\
+            vec4 color = vec4(0.0);\
             float total = 0.0;\
             \
             /* randomize the lookup values to hide the fixed number of samples */\
@@ -38,10 +38,10 @@ function tiltShift(startX, startY, endX, endY, blurRadius, gradientRadius) {
             for (float t = -30.0; t <= 30.0; t++) {\
                 float percent = (t + offset - 0.5) / 30.0;\
                 float weight = 1.0 - abs(percent);\
-                color += texture2D(texture, texCoord + delta / texSize * percent * radius).rgb * weight;\
+                color += texture2D(texture, texCoord + delta / texSize * percent * radius) * weight;\
                 total += weight;\
             }\
-            gl_FragColor = vec4(color / total, 1.0);\
+            gl_FragColor = color / total;\
         }\
     ');
 

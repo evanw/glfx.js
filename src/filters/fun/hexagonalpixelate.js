@@ -45,8 +45,7 @@ function hexagonalPixelate(centerX, centerY, scale) {
             choice.x += choice.y * 0.5;\
             choice.y *= 0.866025404;\
             choice *= scale / texSize;\
-            vec3 color = texture2D(texture, choice + center / texSize).rgb;\
-            gl_FragColor = vec4(color, 1.0);\
+            gl_FragColor = texture2D(texture, choice + center / texSize);\
         }\
     ');
 

@@ -15,7 +15,7 @@ function zoomBlur(centerX, centerY, strength) {
         varying vec2 texCoord;\
         ' + randomShaderFunc + '\
         void main() {\
-            vec3 color = vec3(0.0);\
+            vec4 color = vec4(0.0);\
             float total = 0.0;\
             vec2 toCenter = center - texCoord * texSize;\
             \
@@ -25,10 +25,10 @@ function zoomBlur(centerX, centerY, strength) {
             for (float t = 0.0; t <= 40.0; t++) {\
                 float percent = (t + offset) / 40.0;\
                 float weight = 4.0 * (percent - percent * percent);\
-                color += texture2D(texture, texCoord + toCenter * percent * strength / texSize).rgb * weight;\
+                color += texture2D(texture, texCoord + toCenter * percent * strength / texSize) * weight;\
                 total += weight;\
             }\
-            gl_FragColor = vec4(color / total, 1.0);\
+            gl_FragColor = color / total;\
         }\
     ');
 

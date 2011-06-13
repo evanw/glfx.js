@@ -11,14 +11,14 @@ function brightnessContrast(brightness, contrast) {
         uniform float contrast;\
         varying vec2 texCoord;\
         void main() {\
-            vec3 color = texture2D(texture, texCoord).rgb;\
-            color += brightness;\
+            vec4 color = texture2D(texture, texCoord);\
+            color.rgb += brightness;\
             if (contrast > 0.0) {\
-                color = (color - 0.5) / (1.0 - contrast) + 0.5;\
+                color.rgb = (color.rgb - 0.5) / (1.0 - contrast) + 0.5;\
             } else {\
-                color = (color - 0.5) * (1.0 + contrast) + 0.5;\
+                color.rgb = (color.rgb - 0.5) * (1.0 + contrast) + 0.5;\
             }\
-            gl_FragColor = vec4(color, 1.0);\
+            gl_FragColor = color;\
         }\
     ');
 
