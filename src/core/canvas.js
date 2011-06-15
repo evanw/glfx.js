@@ -21,10 +21,12 @@ function initialize(width, height) {
 
     if (this._.texture) this._.texture.destroy();
     if (this._.spareTexture) this._.spareTexture.destroy();
+    if (this._.spareTexture2) this._.spareTexture2.destroy();
     this.width = width;
     this.height = height;
     this._.texture = new Texture(width, height, gl.RGBA, type);
     this._.spareTexture = new Texture(width, height, gl.RGBA, type);
+    this._.spareTexture2 = new Texture(width, height, gl.RGBA, type);
     this._.flippedShader = this._.flippedShader || new Shader(null, '\
         uniform sampler2D texture;\
         uniform vec2 texSize;\
@@ -143,6 +145,7 @@ exports['canvas'] = function() {
     canvas.hueSaturation = wrap(hueSaturation);
     canvas.colorHalftone = wrap(colorHalftone);
     canvas.triangleBlur = wrap(triangleBlur);
+    canvas.unsharpMask = wrap(unsharpMask);
     canvas.perspective = wrap(perspective);
     canvas.matrixWarp = wrap(matrixWarp);
     canvas.bulgePinch = wrap(bulgePinch);
@@ -151,6 +154,7 @@ exports['canvas'] = function() {
     canvas.edgeWork = wrap(edgeWork);
     canvas.lensBlur = wrap(lensBlur);
     canvas.zoomBlur = wrap(zoomBlur);
+    canvas.denoise = wrap(denoise);
     canvas.swirl = wrap(swirl);
     canvas.ink = wrap(ink);
 
