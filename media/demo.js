@@ -174,6 +174,17 @@ var filters = {
             this.addSlider('saturation', 'Saturation', -1, 1, 0, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).hueSaturation(' + this.hue + ', ' + this.saturation + ').update();');
+        }),
+        new Filter('Denoise', 'denoise', function() {
+            this.addSlider('exponent', 'Exponent', 0, 50, 20, 1);
+        }, function() {
+            this.setCode('canvas.draw(texture).denoise(' + this.exponent + ').update();');
+        }),
+        new Filter('Unsharp Mask', 'unsharpMask', function() {
+            this.addSlider('radius', 'Radius', 0, 200, 20, 1);
+            this.addSlider('strength', 'Strength', 0, 5, 2, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).unsharpMask(' + this.radius + ', ' + this.strength + ').update();');
         })
     ],
     'Blur': [
