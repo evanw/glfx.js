@@ -21,12 +21,11 @@ function initialize(width, height) {
 
     if (this._.texture) this._.texture.destroy();
     if (this._.spareTexture) this._.spareTexture.destroy();
-    if (this._.spareTexture2) this._.spareTexture2.destroy();
     this.width = width;
     this.height = height;
     this._.texture = new Texture(width, height, gl.RGBA, type);
     this._.spareTexture = new Texture(width, height, gl.RGBA, type);
-    this._.spareTexture2 = new Texture(width, height, gl.RGBA, type);
+    this._.extraTexture = this._.extraTexture || new Texture(0, 0, gl.RGBA, type);
     this._.flippedShader = this._.flippedShader || new Shader(null, '\
         uniform sampler2D texture;\
         uniform vec2 texSize;\
@@ -113,7 +112,7 @@ function wrap(func) {
     };
 }
 
-exports['canvas'] = function() {
+exports.canvas = function() {
     var canvas = document.createElement('canvas');
     try {
         gl = canvas.getContext('experimental-webgl', { premultipliedAlpha: false });
@@ -155,8 +154,10 @@ exports['canvas'] = function() {
     canvas.lensBlur = wrap(lensBlur);
     canvas.zoomBlur = wrap(zoomBlur);
     canvas.denoise = wrap(denoise);
+    canvas.curves = wrap(curves);
     canvas.swirl = wrap(swirl);
     canvas.ink = wrap(ink);
 
     return canvas;
 };
+exports.splineInterpolate = splineInterpolate;

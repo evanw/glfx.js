@@ -1,12 +1,4 @@
 var Texture = (function() {
-    function initTexture(texture) {
-        gl.bindTexture(gl.TEXTURE_2D, texture.id);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    }
-
     Texture.fromImage = function(image) {
         var texture = new Texture(image.width, image.height, gl.RGBA, gl.UNSIGNED_BYTE);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
@@ -20,11 +12,22 @@ var Texture = (function() {
         this.format = format;
         this.type = type;
 
-        if (width && height) {
-            initTexture(this);
-            gl.texImage2D(gl.TEXTURE_2D, 0, this.format, width, height, 0, this.format, this.type, null);
-        }
+        gl.bindTexture(gl.TEXTURE_2D, this.id);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        if (width && height) gl.texImage2D(gl.TEXTURE_2D, 0, this.format, width, height, 0, this.format, this.type, null);
     }
+
+    Texture.prototype.initFromBytes = function(width, height, data) {
+        this.width = width;
+        this.height = height;
+        this.format = gl.RGBA;
+        this.type = gl.UNSIGNED_BYTE;
+        gl.bindTexture(gl.TEXTURE_2D, this.id);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, this.type, new Uint8Array(data));
+    };
 
     Texture.prototype.destroy = function() {
         gl.deleteTexture(this.id);
@@ -34,6 +37,32 @@ var Texture = (function() {
     Texture.prototype.use = function(unit) {
         gl.activeTexture(gl.TEXTURE0 + (unit || 0));
         gl.bindTexture(gl.TEXTURE_2D, this.id);
+    };
+
+    Texture.prototype.unuse = function(unit) {
+        gl.activeTexture(gl.TEXTURE0 + (unit || 0));
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    };
+
+    Texture.prototype.ensureFormat = function(width, height, format, type) {
+        // allow passing an existing texture instead of individual arguments
+        if (arguments.length == 1) {
+            var texture = arguments[0];
+            width = texture.width;
+            height = texture.height;
+            format = texture.format;
+            type = texture.type;
+        }
+
+        // change the format only if required
+        if (width != this.width || height != this.height || format != this.format || type != this.type) {
+            this.width = width;
+            this.height = height;
+            this.format = format;
+            this.type = type;
+            gl.bindTexture(gl.TEXTURE_2D, this.id);
+            gl.texImage2D(gl.TEXTURE_2D, 0, this.format, width, height, 0, this.format, this.type, null);
+        }
     };
 
     Texture.prototype.drawTo = function(callback) {

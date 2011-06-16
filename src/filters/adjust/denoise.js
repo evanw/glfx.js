@@ -1,13 +1,13 @@
 /**
  * @filter         Denoise
- * @description    Smooths over grainy noise in dark images using an 8x8 box filter
+ * @description    Smooths over grainy noise in dark images using an 9x9 box filter
  *                 weighted by color intensity, similar to a bilateral filter.
  * @param exponent The exponent of the color intensity difference, should be greater
- *                 than zero. A value of zero just gives an 8x8 box blur and high values
+ *                 than zero. A value of zero just gives an 9x9 box blur and high values
  *                 give the original image, but ideal values are usually around 10-20.
  */
 function denoise(exponent) {
-    // Do a 8x8 bilateral box filter
+    // Do a 9x9 bilateral box filter
     gl.denoise = gl.denoise || new Shader(null, '\
         uniform sampler2D texture;\
         uniform float exponent;\

@@ -20,13 +20,14 @@ function unsharpMask(radius, strength) {
     ');
 
     // Store a copy of the current texture in the second texture unit
+    this._.extraTexture.ensureFormat(this._.texture);
     this._.texture.use();
-    this._.spareTexture2.drawTo(function() {
+    this._.extraTexture.drawTo(function() {
         Shader.getDefaultShader().drawRect();
     });
-    this._.spareTexture2.use(1);
 
     // Blur the current texture, then use the stored texture to detect edges
+    this._.extraTexture.use(1);
     this.triangleBlur(radius);
     gl.unsharpMask.textures({
         originalTexture: 1
@@ -34,6 +35,7 @@ function unsharpMask(radius, strength) {
     simpleShader.call(this, gl.unsharpMask, {
         strength: strength
     });
+    this._.extraTexture.unuse(1);
 
     return this;
 }
