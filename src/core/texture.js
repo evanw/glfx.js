@@ -1,9 +1,7 @@
 var Texture = (function() {
     Texture.fromElement = function(element) {
-        var width = element.width || element.videoWidth;
-        var height = element.height || element.videoHeight;
-        var texture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
+        var texture = new Texture(0, 0, gl.RGBA, gl.UNSIGNED_BYTE);
+        texture.loadContentsOf(element);
         return texture;
     };
 
@@ -23,6 +21,8 @@ var Texture = (function() {
     }
 
     Texture.prototype.loadContentsOf = function(element) {
+        this.width = element.width || element.videoWidth;
+        this.height = element.height || element.videoHeight;
         gl.bindTexture(gl.TEXTURE_2D, this.id);
         gl.texImage2D(gl.TEXTURE_2D, 0, this.format, this.format, this.type, element);
     };
