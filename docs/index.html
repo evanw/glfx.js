@@ -49,7 +49,7 @@ window.onload = function() {
     canvas.draw(texture).ink(0.25).update();
 
     // replace the image with the canvas
-    image.parentNode.insertBefore(canvas);
+    image.parentNode.insertBefore(canvas, image);
     image.parentNode.removeChild(image);
 
     // Note: instead of swapping the &lt;canvas&gt; tag with the &lt;img&gt; tag
@@ -94,12 +94,26 @@ window.onload = function() {
     </div>
     <div class="doc">
         <h4>Texture Constructor</h4>
-        <p><code>var texture = canvas.texture(image);</code></p>
-        <p>Creates a texture to hold the contents of an image. Notice that <kbd>texture()</kbd> is a method on a canvas object, which means if you want to use the same image on two canvas objects you will need two different textures, one for each canvas.</p>
+        <p><code>var texture = canvas.texture(element);</code></p>
+        <p>Creates a texture that initially stores the image from an HTML element. Notice that <kbd>texture()</kbd> is a method on a canvas object, which means if you want to use the same image on two canvas objects you will need two different textures, one for each canvas.</p>
         <table class="docs"><tr>
-            <td><code>image</code></td>
-            <td>The image to store in a texture, either an <kbd>&lt;img&gt;</kbd> or a <kbd>&lt;canvas&gt;</kbd> tag.</td>
+            <td><code>element</code></td>
+            <td>The HTML element to store in the texture, either an <kbd>&lt;img&gt;</kbd>, a <kbd>&lt;canvas&gt;</kbd>, or a <kbd>&lt;video&gt;</kbd>.</td>
         </tr></table>
+    </div>
+    <div class="doc">
+        <h4>Update Texture</h4>
+        <p><code>texture.loadContentsOf(element);</code></p>
+        <p>Loads the image from an HTML element into the texture. This is more efficient than repeatedly creating and destroying textures.</p>
+        <table class="docs"><tr>
+            <td><code>element</code></td>
+            <td>The HTML element to store in the texture, either an <kbd>&lt;img&gt;</kbd>, a <kbd>&lt;canvas&gt;</kbd>, or a <kbd>&lt;video&gt;</kbd>.</td>
+        </tr></table>
+    </div>
+    <div class="doc">
+        <h4>Destroy Texture</h4>
+        <p><code>texture.destroy();</code></p>
+        <p>Textures will be garbage collected eventually when they are no longer referenced, but this method will free GPU resources immediately.</p>
     </div>
 
     <h3>Filters</h3>
