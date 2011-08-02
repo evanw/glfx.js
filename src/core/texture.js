@@ -1,7 +1,9 @@
 var Texture = (function() {
-    Texture.fromImage = function(image) {
-        var texture = new Texture(image.width, image.height, gl.RGBA, gl.UNSIGNED_BYTE);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    Texture.fromElement = function(element) {
+        var width = element.width || element.videoWidth;
+        var height = element.height || element.videoHeight;
+        var texture = new Texture(width, height, gl.RGBA, gl.UNSIGNED_BYTE);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
         return texture;
     };
 
@@ -19,6 +21,11 @@ var Texture = (function() {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         if (width && height) gl.texImage2D(gl.TEXTURE_2D, 0, this.format, width, height, 0, this.format, this.type, null);
     }
+
+    Texture.prototype.loadContentsOf = function(element) {
+        gl.bindTexture(gl.TEXTURE_2D, this.id);
+        gl.texImage2D(gl.TEXTURE_2D, 0, this.format, this.format, this.type, element);
+    };
 
     Texture.prototype.initFromBytes = function(width, height, data) {
         this.width = width;

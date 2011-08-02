@@ -1,0 +1,18 @@
+<script src="http://evanw.github.com/glfx.js/glfx.js"></script>
+<script>
+
+window.onload = function() {
+    var canvas = fx.canvas();
+    var video = document.getElementById('video');
+    var texture = canvas.texture(video);
+    document.body.appendChild(canvas);
+    setInterval(function() {
+        texture.loadContentsOf(video);
+        canvas.draw(texture).swirl(canvas.width / 2, canvas.height / 2, 100, -2).ink(0.5).update();
+    }, 10);
+    video.play();
+};
+
+</script>
+<video id="video" src="movie.ogg"></video>
+<p>This tests the usage of the <code>&lt;video&gt;</code> tag as a texture source. The image below should be the video above after applying the swirl filter followed by the ink filter.</p>

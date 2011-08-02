@@ -7,12 +7,13 @@ function clamp(lo, value, hi) {
 function wrapTexture(texture) {
     return {
         _: texture,
+        loadContentsOf: function(element) { this._.loadContentsOf(element); },
         destroy: function() { this._.destroy(); }
     };
 }
 
-function texture(image) {
-    return wrapTexture(Texture.fromImage(image));
+function texture(element) {
+    return wrapTexture(Texture.fromElement(element));
 }
 
 function initialize(width, height) {
