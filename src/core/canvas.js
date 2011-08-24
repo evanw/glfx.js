@@ -38,9 +38,14 @@ function initialize(width, height) {
     this._.isInitialized = true;
 }
 
-function draw(texture) {
+/*
+   Draw a texture to the canvas, with an optional width and height to scale to.
+   If no width and height are given then the original texture width and height
+   are used.
+*/
+function draw(texture, width, height) {
     if (!this._.isInitialized || texture._.width != this.width || texture._.height != this.height) {
-        initialize.call(this, texture._.width, texture._.height);
+        initialize.call(this, width ? width : texture._.width, height ? height : texture._.height);
     }
 
     texture._.use();
