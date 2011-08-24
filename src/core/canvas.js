@@ -83,6 +83,20 @@ function contents() {
     return wrapTexture(texture);
 }
 
+/*
+   Get a Uint8 array of pixel values: [r, g, b, a, r, g, b, a, ...]
+   Length of the array will be width * height * 4.
+*/
+function getPixelArray() {
+   var w = this._.texture.width;
+    var h = this._.texture.height;
+    var array = new Uint8Array(w * h * 4);
+    this._.texture.drawTo(function() {
+        gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, array);
+    });
+    return array;
+}
+
 // Fix broken toDataURL() methods on some implementations
 function toDataURL(mimeType) {
     var w = this._.texture.width;
@@ -137,6 +151,7 @@ exports.canvas = function() {
     canvas.update = wrap(update);
     canvas.replace = wrap(replace);
     canvas.contents = wrap(contents);
+    canvas.getPixelArray = wrap(getPixelArray);
     canvas.toDataURL = wrap(toDataURL);
 
     // Filter methods
