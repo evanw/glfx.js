@@ -175,6 +175,11 @@ var filters = {
         }, function() {
             this.setCode('canvas.draw(texture).hueSaturation(' + this.hue + ', ' + this.saturation + ').update();');
         }),
+        new Filter('Vibrance', 'vibrance', function() {
+            this.addSlider('amount', 'Amount', -1, 1, 0.5, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).vibrance(' + this.amount + ').update();');
+        }),
         new Filter('Denoise', 'denoise', function() {
             this.addSlider('exponent', 'Exponent', 0, 50, 20, 1);
         }, function() {
