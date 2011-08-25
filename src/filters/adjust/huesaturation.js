@@ -9,15 +9,12 @@
  * @param hue        -1 to 1 (-1 is 180 degree rotation in the negative direction, 0 is no change,
  *                   and 1 is 180 degree rotation in the positive direction)
  * @param saturation -1 to 1 (-1 is solid gray, 0 is no change, and 1 is maximum contrast)
- *
- * @param vibrance   -1 to 1 (-1 is less vibrant, 0 is no change, and 1 is maximum vibrance)
  */
-function hueSaturation(hue, saturation, vibrance) {
+function hueSaturation(hue, saturation) {
     gl.hueSaturation = gl.hueSaturation || new Shader(null, '\
         uniform sampler2D texture;\
         uniform float hue;\
         uniform float saturation;\
-        uniform float vibrance;\
         varying vec2 texCoord;\
         void main() {\
             vec4 color = texture2D(texture, texCoord);\
@@ -36,23 +33,9 @@ function hueSaturation(hue, saturation, vibrance) {
             /* saturation adjustment */\
             float average = (color.r + color.g + color.b) / 3.0;\
             if (saturation > 0.0) {\
-                color.rgb += (average - color.rgb) * (1.0 - 1.0 / (1.0 - saturation));\
+                color.rgb += (average - color.rgb) * (1.0 - 1.0 / (1.001 - saturation));\
             } else {\
                 color.rgb += (average - color.rgb) * (-saturation);\
-            }\
-            \
-            /* vibrance adjustment */\
-            float mx = max(color.r, max(color.g, color.b));\
-            float amt = (mx - average) * (-vibrance);\
-            \
-            if (color.r != mx) {\
-               color.r += ((mx - color.r) * amt);\
-            }\
-            if (color.g != mx) {\
-               color.g += ((mx - color.g) * amt);\
-            }\
-            if (color.b != mx) {\
-               color.b += ((mx - color.b) * amt);\
             }\
             \
             gl_FragColor = color;\
@@ -61,8 +44,7 @@ function hueSaturation(hue, saturation, vibrance) {
 
     simpleShader.call(this, gl.hueSaturation, {
         hue: clamp(-1, hue, 1),
-        saturation: clamp(-1, saturation, 1),
-        vibrance: clamp(-1, vibrance, 1)
+        saturation: clamp(-1, saturation, 1)
     });
 
     return this;
