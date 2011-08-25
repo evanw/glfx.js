@@ -174,6 +174,7 @@ exports.canvas = function() {
     canvas.edgeWork = wrap(edgeWork);
     canvas.lensBlur = wrap(lensBlur);
     canvas.zoomBlur = wrap(zoomBlur);
+    canvas.noise = wrap(noise);
     canvas.denoise = wrap(denoise);
     canvas.curves = wrap(curves);
     canvas.swirl = wrap(swirl);
