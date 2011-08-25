@@ -180,6 +180,7 @@ exports.canvas = function() {
     canvas.swirl = wrap(swirl);
     canvas.ink = wrap(ink);
     canvas.vignette = wrap(vignette);
+    canvas.sepia = wrap(sepia);
 
     return canvas;
 };
