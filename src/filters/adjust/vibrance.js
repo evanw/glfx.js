@@ -1,7 +1,7 @@
 /**
  * @filter           Vibrance
  * @description      Change saturation in a smart way by boosting more saturated values
- *                   more than less saturated values.
+ *                   less than less saturated values.
  * @param vibrance   -1 to 1 (-1 is less vibrant, 0 is no change, and 1 is more vibrant)
  */
 function vibrance(vibrance) {
