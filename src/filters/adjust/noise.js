@@ -1,6 +1,6 @@
 /**
  * @filter         Noise
- * @description    Adds luma noise to images
+ * @description    Adds black and white noise to the image.
  * @param amount   0 to 1 (0 for no effect, 1 for maximum noise)
  */
 function noise(amount) {
@@ -22,10 +22,10 @@ function noise(amount) {
             gl_FragColor = color;\
         }\
     ');
-    
-     simpleShader.call(this, gl.noise, {
-         amount: clamp(0, amount, 1)
-     });
+
+    simpleShader.call(this, gl.noise, {
+        amount: clamp(0, amount, 1)
+    });
 
     return this;
 }
