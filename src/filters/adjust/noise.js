@@ -24,7 +24,7 @@ function noise(amount) {
     ');
     
      simpleShader.call(this, gl.noise, {
-         amount: clamp(0, amount, 1),
+         amount: clamp(0, amount, 1)
      });
 
     return this;

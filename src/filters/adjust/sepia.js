@@ -23,7 +23,7 @@ function sepia(amount) {
     ');
     
      simpleShader.call(this, gl.sepia, {
-         amount: clamp(0, amount, 1),
+         amount: clamp(0, amount, 1)
      });
 
     return this;

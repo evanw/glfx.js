@@ -22,7 +22,7 @@ function vignette(size, amount) {
     
      simpleShader.call(this, gl.vignette, {
          size: clamp(0, size, 1),
-         amount: clamp(0, amount, 1),
+         amount: clamp(0, amount, 1)
      });
 
     return this;
