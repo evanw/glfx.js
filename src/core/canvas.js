@@ -179,6 +179,7 @@ exports.canvas = function() {
     canvas.curves = wrap(curves);
     canvas.swirl = wrap(swirl);
     canvas.ink = wrap(ink);
+    canvas.vignette = wrap(vignette);
 
     return canvas;
 };
