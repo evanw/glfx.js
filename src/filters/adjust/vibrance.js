@@ -16,15 +16,7 @@ function vibrance(vibrance) {
             float mx = max(color.r, max(color.g, color.b));\
             float amt = (mx - average) * (-vibrance);\
             \
-            if (color.r != mx) {\
-               color.r += ((mx - color.r) * amt);\
-            }\
-            if (color.g != mx) {\
-               color.g += ((mx - color.g) * amt);\
-            }\
-            if (color.b != mx) {\
-               color.b += ((mx - color.b) * amt);\
-            }\
+            color.rgb += (mx - color.rgb) * amt;\
             \
             gl_FragColor = color;\
         }\
