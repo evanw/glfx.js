@@ -185,6 +185,22 @@ var filters = {
             this.addSlider('strength', 'Strength', 0, 5, 2, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).unsharpMask(' + this.radius + ', ' + this.strength + ').update();');
+        }),
+        new Filter('Noise', 'noise', function() {
+            this.addSlider('amount', 'Amount', 0, 1, 0.5, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).noise(' + this.amount + ').update();');
+        }),
+        new Filter('Sepia', 'sepia', function() {
+            this.addSlider('amount', 'Amount', 0, 1, 1, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).sepia(' + this.amount + ').update();');
+        }),
+        new Filter('Vignette', 'vignette', function() {
+            this.addSlider('size', 'Size', 0, 1, 0.5, 0.01);
+            this.addSlider('amount', 'Amount', 0, 1, 0.5, 0.01);
+        }, function() {
+            this.setCode('canvas.draw(texture).vignette(' + this.size + ', ' + this.amount + ').update();');
         })
     ],
     'Blur': [
