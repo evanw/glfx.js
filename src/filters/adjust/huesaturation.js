@@ -44,7 +44,7 @@ function hueSaturation(hue, saturation) {
 
     simpleShader.call(this, gl.hueSaturation, {
         hue: clamp(-1, hue, 1),
-        saturation: clamp(-1, saturation, 1)
+        saturation: clamp(-1, saturation, 1),
     });
 
     return this;

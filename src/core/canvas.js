@@ -38,9 +38,14 @@ function initialize(width, height) {
     this._.isInitialized = true;
 }
 
-function draw(texture) {
+/*
+   Draw a texture to the canvas, with an optional width and height to scale to.
+   If no width and height are given then the original texture width and height
+   are used.
+*/
+function draw(texture, width, height) {
     if (!this._.isInitialized || texture._.width != this.width || texture._.height != this.height) {
-        initialize.call(this, texture._.width, texture._.height);
+        initialize.call(this, width ? width : texture._.width, height ? height : texture._.height);
     }
 
     texture._.use();
@@ -81,6 +86,20 @@ function contents() {
         Shader.getDefaultShader().drawRect();
     });
     return wrapTexture(texture);
+}
+
+/*
+   Get a Uint8 array of pixel values: [r, g, b, a, r, g, b, a, ...]
+   Length of the array will be width * height * 4.
+*/
+function getPixelArray() {
+   var w = this._.texture.width;
+    var h = this._.texture.height;
+    var array = new Uint8Array(w * h * 4);
+    this._.texture.drawTo(function() {
+        gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, array);
+    });
+    return array;
 }
 
 // Fix broken toDataURL() methods on some implementations
@@ -137,12 +156,14 @@ exports.canvas = function() {
     canvas.update = wrap(update);
     canvas.replace = wrap(replace);
     canvas.contents = wrap(contents);
+    canvas.getPixelArray = wrap(getPixelArray);
     canvas.toDataURL = wrap(toDataURL);
 
     // Filter methods
     canvas.brightnessContrast = wrap(brightnessContrast);
     canvas.hexagonalPixelate = wrap(hexagonalPixelate);
     canvas.hueSaturation = wrap(hueSaturation);
+    canvas.vibrance = wrap(vibrance);
     canvas.colorHalftone = wrap(colorHalftone);
     canvas.triangleBlur = wrap(triangleBlur);
     canvas.unsharpMask = wrap(unsharpMask);
@@ -154,10 +175,14 @@ exports.canvas = function() {
     canvas.edgeWork = wrap(edgeWork);
     canvas.lensBlur = wrap(lensBlur);
     canvas.zoomBlur = wrap(zoomBlur);
+    canvas.noise = wrap(noise);
     canvas.denoise = wrap(denoise);
     canvas.curves = wrap(curves);
     canvas.swirl = wrap(swirl);
     canvas.ink = wrap(ink);
+    canvas.vignette = wrap(vignette);
+    canvas.sepia = wrap(sepia);
+    canvas.whiteBalance = wrap(whiteBalance);
 
     return canvas;
 };
