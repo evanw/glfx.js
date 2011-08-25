@@ -181,6 +181,7 @@ exports.canvas = function() {
     canvas.ink = wrap(ink);
     canvas.vignette = wrap(vignette);
     canvas.sepia = wrap(sepia);
+    canvas.whiteBalance = wrap(whiteBalance);
 
     return canvas;
 };
