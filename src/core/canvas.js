@@ -163,6 +163,7 @@ exports.canvas = function() {
     canvas.brightnessContrast = wrap(brightnessContrast);
     canvas.hexagonalPixelate = wrap(hexagonalPixelate);
     canvas.hueSaturation = wrap(hueSaturation);
+    canvas.vibrance = wrap(vibrance);
     canvas.colorHalftone = wrap(colorHalftone);
     canvas.triangleBlur = wrap(triangleBlur);
     canvas.unsharpMask = wrap(unsharpMask);
