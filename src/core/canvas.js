@@ -65,12 +65,12 @@ function update() {
     return this;
 }
 
-function simpleShader(shader, uniforms) {
-    this._.texture.use();
+function simpleShader(shader, uniforms, textureIn, textureOut) {
+    (textureIn || this._.texture).use();
     this._.spareTexture.drawTo(function() {
         shader.uniforms(uniforms).drawRect();
     });
-    this._.spareTexture.swapWith(this._.texture);
+    this._.spareTexture.swapWith(textureOut || this._.texture);
 }
 
 function replace(node) {
