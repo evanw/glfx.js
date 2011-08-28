@@ -229,10 +229,11 @@ var filters = {
             this.setCode('canvas.draw(texture).tiltShift(' + this.start.x + ', ' + this.start.y + ', ' + this.end.x + ', ' + this.end.y + ', ' + this.blurRadius + ', ' + this.gradientRadius + ').update();');
         }),
         new Filter('Lens Blur', 'lensBlur', function() {
-            this.addSlider('radius', 'Radius', 0, 20, 10, 1);
+            this.addSlider('radius', 'Radius', 0, 50, 10, 1);
             this.addSlider('brightness', 'Brightness', -1, 1, 0.75, 0.01);
+            this.addSlider('angle', 'Angle', -Math.PI, Math.PI, 0, 0.01);
         }, function() {
-            this.setCode('canvas.draw(texture).lensBlur(' + this.radius + ', ' + this.brightness + ').update();');
+            this.setCode('canvas.draw(texture).lensBlur(' + this.radius + ', ' + this.brightness + ', ' + this.angle + ').update();');
         })
     ],
     'Warp': [
