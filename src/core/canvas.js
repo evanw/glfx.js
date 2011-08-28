@@ -29,7 +29,6 @@ function initialize(width, height) {
     this._.extraTexture = this._.extraTexture || new Texture(0, 0, gl.RGBA, type);
     this._.flippedShader = this._.flippedShader || new Shader(null, '\
         uniform sampler2D texture;\
-        uniform vec2 texSize;\
         varying vec2 texCoord;\
         void main() {\
             gl_FragColor = texture2D(texture, vec2(texCoord.x, 1.0 - texCoord.y));\
@@ -58,10 +57,7 @@ function draw(texture, width, height) {
 
 function update() {
     this._.texture.use();
-    this._.flippedShader.uniforms({
-        texSize: [this._.texture.width, this._.texture.height]
-    }).drawRect();
-
+    this._.flippedShader.drawRect();
     return this;
 }
 
@@ -93,7 +89,7 @@ function contents() {
    Length of the array will be width * height * 4.
 */
 function getPixelArray() {
-   var w = this._.texture.width;
+    var w = this._.texture.width;
     var h = this._.texture.height;
     var array = new Uint8Array(w * h * 4);
     this._.texture.drawTo(function() {
@@ -106,10 +102,7 @@ function getPixelArray() {
 function toDataURL(mimeType) {
     var w = this._.texture.width;
     var h = this._.texture.height;
-    var array = new Uint8Array(w * h * 4);
-    this._.texture.drawTo(function() {
-        gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, array);
-    });
+    var array = getPixelArray.call(this);
     var canvas2d = document.createElement('canvas');
     var c = canvas2d.getContext('2d');
     canvas2d.width = w;
