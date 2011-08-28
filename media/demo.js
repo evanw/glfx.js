@@ -2,10 +2,11 @@
 // Filter object
 ////////////////////////////////////////////////////////////////////////////////
 
-function Filter(name, func, init, update) {
+function Filter(name, func, init, update, imageFile) {
     this.name = name;
     this.func = func;
     this.update = update;
+    this.imageFile = imageFile;
     this.sliders = [];
     this.nubs = [];
     init.call(this);
@@ -25,6 +26,13 @@ Filter.prototype.setCode = function(code) {
 };
 
 Filter.prototype.use = function() {
+    // Load the texture from the image and draw it to the canvas
+    var image = images[this.imageFile || 'image.jpg'];
+    texture = image.texture;
+    $('#container').css({ width: texture._.width, height: texture._.height });
+    $('#label').html('Image credit: <a href="' + image.url + '">' + image.credit + '</a>');
+    canvas.draw(image.texture).update();
+
     // Clear all rows but the first two (which contain the filter selector and code sample)
     var tbody = $('#properties')[0].firstChild;
     for (var tr = tbody.firstChild.nextSibling.nextSibling; tr; tr = next) {
@@ -84,20 +92,39 @@ Filter.prototype.use = function() {
 var canvas;
 var texture;
 
-function init(image) {
-    var placeholder = document.getElementById('placeholder');
+var initCount = 0, loadCount = 1;
+var images = {
+    'image.jpg': { credit: 'matthigh', url: 'http://www.flickr.com/photos/matthigh/2125630879/' },
+    'lighthouse.jpg': { credit: 'renet', url: 'http://www.flickr.com/photos/renet/12135813/' },
+    'perspective.jpg': { credit: 'stuckincustoms', url: 'http://www.flickr.com/photos/stuckincustoms/1213760517/' }
+};
+for (var file in images) {
+    var image = images[file].image = new Image();
+    image.onload = init;
+    image.src = '/glfx.js/media/' + file;
+    loadCount++;
+}
+
+$(window).load(init);
+
+function init() {
+    // Count the images as they load and only initialize when they are all loaded
+    if (++initCount < loadCount) return;
 
     // Try to get a WebGL canvas
+    var placeholder = document.getElementById('placeholder');
     try {
         canvas = fx.canvas();
     } catch (e) {
         placeholder.innerHTML = e;
         return;
     }
+    canvas.replace(placeholder);
 
-    // Create a texture from the image and draw it to the canvas
-    texture = canvas.texture(image);
-    canvas.draw(texture).update().replace(placeholder);
+    // Load the textures
+    for (var file in images) {
+        images[file].texture = canvas.texture(images[file].image);
+    }
 
     // Create the filter selector
     var html = '';
@@ -149,18 +176,11 @@ function init(image) {
     setInterval(checkHash, 100);
 }
 
-$(window).load(function() {
-    var image = new Image();
-    image.onload = function() {
-        init(image);
-    };
-    image.src = '/glfx.js/media/image.jpg';
-});
-
 ////////////////////////////////////////////////////////////////////////////////
 // Filter definitions
 ////////////////////////////////////////////////////////////////////////////////
 
+var perspectiveNubs = [175, 156, 496, 55, 161, 279, 504, 330];
 var filters = {
     'Adjust': [
         new Filter('Brightness / Contrast', 'brightnessContrast', function() {
@@ -234,7 +254,7 @@ var filters = {
             this.addSlider('angle', 'Angle', -Math.PI, Math.PI, 0, 0.01);
         }, function() {
             this.setCode('canvas.draw(texture).lensBlur(' + this.radius + ', ' + this.brightness + ', ' + this.angle + ').update();');
-        })
+        }, 'lighthouse.jpg')
     ],
     'Warp': [
         new Filter('Swirl', 'swirl', function() {
@@ -252,17 +272,16 @@ var filters = {
             this.setCode('canvas.draw(texture).bulgePinch(' + this.center.x + ', ' + this.center.y + ', ' + this.radius + ', ' + this.strength + ').update();');
         }),
         new Filter('Perspective', 'perspective', function() {
-            this.addNub('a', 0.25, 0.25);
-            this.addNub('b', 0.75, 0.25);
-            this.addNub('c', 0.25, 0.75);
-            this.addNub('d', 0.75, 0.75);
+            var w = 640, h = 425;
+            this.addNub('a', perspectiveNubs[0] / w, perspectiveNubs[1] / h);
+            this.addNub('b', perspectiveNubs[2] / w, perspectiveNubs[3] / h);
+            this.addNub('c', perspectiveNubs[4] / w, perspectiveNubs[5] / h);
+            this.addNub('d', perspectiveNubs[6] / w, perspectiveNubs[7] / h);
         }, function() {
-            var xmin = canvas.width * 0.25, ymin = canvas.height * 0.25;
-            var xmax = canvas.width * 0.75, ymax = canvas.height * 0.75;
-            var before = [xmin, ymin, xmax, ymin, xmin, ymax, xmax, ymax];
+            var before = perspectiveNubs;
             var after = [this.a.x, this.a.y, this.b.x, this.b.y, this.c.x, this.c.y, this.d.x, this.d.y];
             this.setCode('canvas.draw(texture).perspective([' + before + '], [' + after + ']).update();');
-        })
+        }, 'perspective.jpg')
     ],
     'Fun': [
         new Filter('Ink', 'ink', function() {
