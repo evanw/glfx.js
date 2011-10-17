@@ -1,0 +1,26 @@
+<script src="../glfx.js"></script>
+<script>
+
+window.onload = function() {
+    var canvas, texture, image = document.getElementById('image');
+    var w = image.width, h = image.height;
+
+    canvas = fx.canvas();
+    texture = canvas.texture(image);
+    document.body.appendChild(canvas);
+    canvas.draw(texture).triangleBlur(20).update();
+
+    canvas = fx.canvas();
+    texture = canvas.texture(image);
+    document.body.appendChild(canvas);
+    canvas.draw(texture).zoomBlur(w * 0.4, h * 0.4, 0.25).update();
+
+    canvas = fx.canvas();
+    texture = canvas.texture(image);
+    document.body.appendChild(canvas);
+    canvas.draw(texture).tiltShift(0, 0, w, h, 20, 40).update();
+};
+
+</script>
+<img id="image" src="transparent.png">
+<p>This tests blur filters <code>canvas.triangleBlur()</code>, <code>canvas.zoomBlur()</code>, and <code>canvas.tiltShift()</code>. The image above has a transparent red center, but the red color should not leak into the surrounding image when blurred in any of the images below.</p>

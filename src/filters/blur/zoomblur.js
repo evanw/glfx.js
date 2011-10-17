@@ -25,10 +25,19 @@ function zoomBlur(centerX, centerY, strength) {
             for (float t = 0.0; t <= 40.0; t++) {\
                 float percent = (t + offset) / 40.0;\
                 float weight = 4.0 * (percent - percent * percent);\
-                color += texture2D(texture, texCoord + toCenter * percent * strength / texSize) * weight;\
+                vec4 sample = texture2D(texture, texCoord + toCenter * percent * strength / texSize);\
+                \
+                /* switch to pre-multiplied alpha to correctly blur transparent images */\
+                sample.rgb *= sample.a;\
+                \
+                color += sample * weight;\
                 total += weight;\
             }\
+            \
             gl_FragColor = color / total;\
+            \
+            /* switch back from pre-multiplied alpha */\
+            gl_FragColor.rgb /= gl_FragColor.a + 0.00001;\
         }\
     ');
 

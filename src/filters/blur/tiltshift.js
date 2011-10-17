@@ -38,10 +38,19 @@ function tiltShift(startX, startY, endX, endY, blurRadius, gradientRadius) {
             for (float t = -30.0; t <= 30.0; t++) {\
                 float percent = (t + offset - 0.5) / 30.0;\
                 float weight = 1.0 - abs(percent);\
-                color += texture2D(texture, texCoord + delta / texSize * percent * radius) * weight;\
+                vec4 sample = texture2D(texture, texCoord + delta / texSize * percent * radius);\
+                \
+                /* switch to pre-multiplied alpha to correctly blur transparent images */\
+                sample.rgb *= sample.a;\
+                \
+                color += sample * weight;\
                 total += weight;\
             }\
+            \
             gl_FragColor = color / total;\
+            \
+            /* switch back from pre-multiplied alpha */\
+            gl_FragColor.rgb /= gl_FragColor.a + 0.00001;\
         }\
     ');
 
