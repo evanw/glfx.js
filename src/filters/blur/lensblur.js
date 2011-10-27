@@ -7,7 +7,9 @@
  *                   can be separated into three rhombi, each of which is just a skewed box blur.
  *                   This filter makes use of the floating point texture WebGL extension to implement
  *                   the brightness parameter, so there will be severe visual artifacts if brightness
- *                   is non-zero and the floating point texture extension is not available.
+ *                   is non-zero and the floating point texture extension is not available. The
+ *                   idea was from John White's SIGGRAPH 2011 talk but this effect has an additional
+ *                   brightness parameter that fakes what would otherwise come from a HDR source.
  * @param radius     the radius of the hexagonal disk convolved with the image
  * @param brightness -1 to 1 (the brightness of the bokeh, negative values will create dark bokeh)
  * @param angle      the rotation of the bokeh in radians
