@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html><head>
+    <title>glfx.js</title>
+    <script type="text/javascript" src="{{ baseurl }}/media/jquery-1.5.1.min.js"></script>
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Goudy+Bookletter+1911" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{ baseurl }}/media/style.css">
+    <script type="text/javascript" src="{{ baseurl }}/media/common.js"></script>
+    <script type="text/javascript" src="{{ baseurl }}/glfx.js"></script>
+    {%- block header %}{% endblock %}
+</head><body>
+    <h1><a href="{{ baseurl }}/">glfx.js</a></h1>
+    <h2>An image effects library for JavaScript</h2>
+    <ul class="nav">
+        <li><a href="{{ baseurl }}/glfx.js">Download</a></li>
+        <li><a href="{{ baseurl }}/demo/">Demo</a></li>
+        <li><a href="{{ baseurl }}/docs/">Documentation</a></li>
+        <li><a href="http://github.com/evanw/glfx.js">Source Code</a></li>
+    </ul>
+    <div class="block">
+        {%- block content %}{% endblock %}
+    </div>
+    <div class="footer">Created by <a href="http://madebyevan.com">Evan Wallace</a> in 2011</div>
+</body></html>

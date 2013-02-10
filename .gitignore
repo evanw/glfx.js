@@ -1,3 +1,7 @@
 .DS_Store
 *.pyc
-glfx.js
+/glfx.js
+/www/glfx.js/glfx.js
+/www/glfx.js/index.html
+/www/glfx.js/demo/index.html
+/www/glfx.js/docs/index.html

@@ -1,0 +1,259 @@
+a { color: inherit; }
+pre, code, kbd { font: 15px/17px Inconsolata, monospace; }
+pre { background: #BFBFBF; padding: 10px; margin: 20px 0; }
+#code { display: block; padding-left: 2em; text-indent: -2em; }
+body { margin: 0 auto; padding: 0 30px; max-width: 1000px; font: 15px/20px Arial, sans-serif; background: #3F3F3F; color: #DDD; }
+
+h1 {
+    text-align: center;
+    font: 160px/200px 'Goudy Bookletter 1911', Georgia, Times, serif;
+    margin: 50px 0 0 0;
+    text-shadow: 0 1px 0 #777,
+                 0 2px 0 #777,
+                 0 3px 0 #777,
+                 0 4px 0 #777,
+                 0 5px 0 #777,
+                 0 6px 1px rgba(0,0,0,.1),
+                 0 0 5px rgba(0,0,0,.1),
+                 0 1px 3px rgba(0,0,0,.3),
+                 0 3px 5px rgba(0,0,0,.2),
+                 0 5px 10px rgba(0,0,0,.25),
+                 0 10px 10px rgba(0,0,0,.2),
+                 0 20px 20px rgba(0,0,0,.15);
+}
+
+h1 a { display: inline-block; text-decoration: none; padding: 0 0 5px 0; }
+h1 a:hover { color: white; }
+h1 a:focus { outline: none; }
+h1 a:active {
+    padding: 5px 0 0 0;
+    text-shadow: 0 0 10px rgba(0,0,0,.25),
+                 0 5px 10px rgba(0,0,0,.2),
+                 0 15px 20px rgba(0,0,0,.15);
+}
+
+h2 {
+    font: italic 30px/35px Georgia, serif;
+    text-align: center;
+    margin: 0;
+    text-shadow: 0 1px 0 #777,
+                 0 2px 0 #777,
+                 0 3px 0 #777,
+                 0 6px 1px rgba(0,0,0,.1),
+                 0 0 5px rgba(0,0,0,.1),
+                 0 1px 3px rgba(0,0,0,.3),
+                 0 3px 5px rgba(0,0,0,.2),
+                 0 5px 10px rgba(0,0,0,.25),
+                 0 10px 10px rgba(0,0,0,.2),
+                 0 20px 20px rgba(0,0,0,.15);
+}
+
+.nav {
+    margin: 20px 0 50px 0;
+    text-align: center;
+    list-style: none;
+    padding: 0;
+}
+
+.nav li {
+    margin: 0 5px 10px 0;
+    display: inline-block;
+    height: 46px;
+    vertical-align: top;
+}
+
+.nav a {
+    font: bold 20px/40px Arial, sans-serif;
+    text-decoration: none;
+    text-shadow: 0 1px 0 white;
+    padding: 0 20px;
+    color: black;
+    display: inline-block;
+    background: #DDD;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    box-shadow: 0 1px 0 #777,
+                0 2px 0 #777,
+                0 3px 0 #777,
+                0 4px 0 #777,
+                0 5px 0 #777,
+                0 6px 0 #777,
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 1px 0 #777,
+                0 2px 0 #777,
+                0 3px 0 #777,
+                0 4px 0 #777,
+                0 5px 0 #777,
+                0 6px 0 #777,
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 1px 0 #777,
+                0 2px 0 #777,
+                0 3px 0 #777,
+                0 4px 0 #777,
+                0 5px 0 #777,
+                0 6px 0 #777,
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+}
+
+.nav a:hover {
+    background: white;
+}
+
+.nav a:focus { outline: none; }
+
+.nav a:active {
+    margin-top: 6px;
+    box-shadow: 0 -1px 10px rgba(0,0,0,.25),
+                0 4px 10px rgba(0,0,0,.2),
+                0 14px 20px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 -1px 10px rgba(0,0,0,.25),
+                0 4px 10px rgba(0,0,0,.2),
+                0 14px 20px rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 -1px 10px rgba(0,0,0,.25),
+                0 4px 10px rgba(0,0,0,.2),
+                0 14px 20px rgba(0,0,0,.15);
+}
+
+p, h3, h4 { margin: 0; padding: 20px 0 0 0; }
+ul { margin: 0; padding-top: 20px; padding-bottom: 0; }
+h3 { text-align: center; font-size: 30px; text-shadow: 0 1px 0 white; padding: 20px 0; }
+* + h3 { padding-top: 60px; }
+h4 { font-size: 25px; text-shadow: 0 1px 0 white; }
+.doc h4 { padding: 0; }
+h4 small { font-size: 15px; position: relative; left: 10px; top: -3px; }
+
+.doc { padding: 30px; margin: 0 -30px; }
+.doc:target { background: white; }
+
+.block {
+    margin: 0 0 20px 0;
+    padding: 10px 30px 30px 30px;
+    color: black;
+    background: #DDD;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    box-shadow: 0 1px 0 #777,
+                0 2px 0 #777,
+                0 3px 0 #777,
+                0 4px 0 #777,
+                0 5px 0 #777,
+                0 6px 0 #777,
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 1px 0 #777,
+                0 2px 0 #777,
+                0 3px 0 #777,
+                0 4px 0 #777,
+                0 5px 0 #777,
+                0 6px 0 #777,
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 1px 0 #777,
+                0 2px 0 #777,
+                0 3px 0 #777,
+                0 4px 0 #777,
+                0 5px 0 #777,
+                0 6px 0 #777,
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+}
+
+.footer {
+    color: #111;
+    text-shadow: 0 1px 0 #555;
+    text-align: center;
+    margin: 40px 0 100px 0;
+}
+
+.placeholder { text-align: center; padding: 40px 0 20px 0; font-size: 12px; }
+#container {
+    position: relative; width: 640px; height: 479px; background: #BFBFBF; display: inline-block; line-height: 479px; overflow: hidden;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEW/v7////+Zw/90AAAAEUlEQVQI12P4z8CAFWEX/Q8Afr8P8erzE9cAAAAASUVORK5CYII=);
+    border: 1px solid black;
+    box-shadow: 0 0 3px black;
+    -moz-box-shadow: 0 0 3px black;
+    -webkit-box-shadow: 0 0 3px black;
+}
+#label { line-height: 14px; padding-top: 5px; }
+#placeholder { background: rgba(0, 0, 0, 0.8); border-radius: 30px; padding: 5px 17px; color: white; font-weight: bold; }
+canvas { vertical-align: top; }
+
+table { border-collapse: collapse; }
+th, td { padding: 0; text-align: left; vertical-align: top; }
+th { width: 100px; padding-right: 10px; }
+.docs { margin-top: 20px; }
+.docs td + td { padding-left: 20px; }
+
+.nub {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    margin: -5px;
+    background: #3F9FFF;
+    background: -moz-linear-gradient(#7FBFFF, #007FFF);
+    background: -webkit-gradient(linear, left top, left bottom, from(#7FBFFF), to(#007FFF));
+    border: 2px solid white;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+    cursor: move;
+}
+#nubs { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+
+.ui-slider {
+    position: relative;
+    width: 300px;
+    height: 3px;
+    background: #3F3F3F;
+    margin-top: 8px;
+}
+
+.ui-slider-handle {
+    cursor: default;
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #DFDFDF;
+    background: -moz-linear-gradient(#EFEFEF, #BFBFBF);
+    background: -webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#BFBFBF));
+    border: 1px solid #3F3F3F;
+    margin: -5px 0 0 -7px;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}
+
+.ui-state-active { background: white; }
+.ui-state-focus { outline: none; }

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% set baseurl = ".." %}
+
+{% block header %}
+    <script type="text/javascript" src="{{ baseurl }}/media/jquery.ui.slider.js"></script>
+    <script type="text/javascript" src="{{ baseurl }}/media/demo.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h3>Demo</h3>
+    <div class="placeholder">
+        <div id="container">
+            <span id="placeholder">Loading...</span>
+            <div id="nubs"></div>
+        </div>
+        <div id="label">&nbsp;</div>
+    </div>
+    <table id="properties"><tbody><tr>
+        <th>Filter:</th>
+        <td><select id="filters"></select></td>
+    </tr><tr>
+        <th>Code:</th>
+        <td><code id="code"></code></td>
+    </tr></tbody></table>
+{% endblock %}
