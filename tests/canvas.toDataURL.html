@@ -1,0 +1,15 @@
+<script src="http://evanw.github.com/glfx.js/glfx.js"></script>
+<script>
+
+window.onload = function() {
+    var canvas = fx.canvas();
+    var texture = canvas.texture(document.getElementById('image'));
+    canvas.draw(texture).ink(0.25).update();
+    var image = new Image;
+    image.src = canvas.toDataURL();
+    document.body.appendChild(image);
+};
+
+</script>
+<img id="image" src="image.jpg">
+<p>This tests the toDataURL() method on the canvas, which is part of the native WebGLRenderingContext API. The above image should appear below with the ink filter applied.</p>

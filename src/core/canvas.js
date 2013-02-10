@@ -111,23 +111,6 @@ function getPixelArray() {
     return array;
 }
 
-// Fix broken toDataURL() methods on some implementations
-function toDataURL(mimeType) {
-    var w = this._.texture.width;
-    var h = this._.texture.height;
-    var array = getPixelArray.call(this);
-    var canvas2d = document.createElement('canvas');
-    var c = canvas2d.getContext('2d');
-    canvas2d.width = w;
-    canvas2d.height = h;
-    var data = c.createImageData(w, h);
-    for (var i = 0; i < array.length; i++) {
-        data.data[i] = array[i];
-    }
-    c.putImageData(data, 0, 0);
-    return canvas2d.toDataURL(mimeType);
-}
-
 function wrap(func) {
     return function() {
         // Make sure that we're using the correct global WebGL context
@@ -163,7 +146,6 @@ exports.canvas = function() {
     canvas.replace = wrap(replace);
     canvas.contents = wrap(contents);
     canvas.getPixelArray = wrap(getPixelArray);
-    canvas.toDataURL = wrap(toDataURL);
 
     // Filter methods
     canvas.brightnessContrast = wrap(brightnessContrast);
