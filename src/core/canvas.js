@@ -17,8 +17,21 @@ function texture(element) {
 }
 
 function initialize(width, height) {
-    // Go for floating point buffer textures if we can, it'll make the bokeh filter look a lot better
-    var type = gl.getExtension('OES_texture_float') ? gl.FLOAT : gl.UNSIGNED_BYTE;
+    var type = gl.UNSIGNED_BYTE;
+
+    // Go for floating point buffer textures if we can, it'll make the bokeh
+    // filter look a lot better. Note that on Windows, ANGLE does not let you
+    // render to a floating-point texture when linear filtering is enabled.
+    // See http://crbug.com/172278 for more information.
+    if (gl.getExtension('OES_texture_float')) {
+        var testTexture = new Texture(100, 100, gl.RGBA, gl.FLOAT);
+        try {
+            // Only use gl.FLOAT if we can render to it
+            testTexture.drawTo(function() { type = gl.FLOAT; });
+        } catch (e) {
+        }
+        testTexture.destroy();
+    }
 
     if (this._.texture) this._.texture.destroy();
     if (this._.spareTexture) this._.spareTexture.destroy();
