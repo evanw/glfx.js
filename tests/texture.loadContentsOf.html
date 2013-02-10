@@ -2,11 +2,12 @@
 <script>
 
 window.onload = function() {
-    var canvas = fx.canvas();
-    document.body.appendChild(canvas);
-    var texture = canvas.texture(document.getElementById('imageA'));
+    var canvasA = fx.canvas();
+    document.body.appendChild(canvasA);
+    var texture = canvasA.texture(document.getElementById('imageA'));
+    var canvasB = fx.canvas();
     texture.loadContentsOf(document.getElementById('imageB'));
-    canvas.draw(texture).update();
+    canvasA.draw(texture).update();
 };
 
 </script>

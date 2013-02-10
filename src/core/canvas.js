@@ -7,8 +7,16 @@ function clamp(lo, value, hi) {
 function wrapTexture(texture) {
     return {
         _: texture,
-        loadContentsOf: function(element) { this._.loadContentsOf(element); },
-        destroy: function() { this._.destroy(); }
+        loadContentsOf: function(element) {
+            // Make sure that we're using the correct global WebGL context
+            gl = this._.gl;
+            this._.loadContentsOf(element);
+        },
+        destroy: function() {
+            // Make sure that we're using the correct global WebGL context
+            gl = this._.gl;
+            this._.destroy();
+        }
     };
 }
 

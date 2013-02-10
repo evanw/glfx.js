@@ -6,6 +6,7 @@ var Texture = (function() {
     };
 
     function Texture(width, height, format, type) {
+        this.gl = gl;
         this.id = gl.createTexture();
         this.width = width;
         this.height = height;
