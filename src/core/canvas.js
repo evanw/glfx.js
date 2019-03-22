@@ -129,8 +129,8 @@ function wrap(func) {
     };
 }
 
-exports.canvas = function() {
-    var canvas = document.createElement('canvas');
+exports.canvas = function(canvas) {
+    canvas = canvas instanceof window.HTMLCanvasElement ? canvas : document.createElement('canvas');
     try {
         gl = canvas.getContext('experimental-webgl', { premultipliedAlpha: false });
     } catch (e) {
