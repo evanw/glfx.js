@@ -17,7 +17,17 @@ header = '''/*
 
 def sources():
     return [os.path.join(base, f) for base, folders, files in \
-        os.walk(input_path) for f in files if f.endswith('.js')]
+        os.walk(input_path) for f in files if 'include' in sys.argv and includes(os.path.join(base, f)) or 'include' not in sys.argv and f.endswith('.js')]
+
+def includes(file):
+    if '/filters/' in file:
+        if 'common' in file:
+            return True
+        for name in sys.argv:
+            if name in file:
+                return True
+        return False
+    return True
 
 def compile(sources):
     return '\n'.join('// %s\n%s' % (path, open(path).read()) for path in sources)
