@@ -60,7 +60,7 @@ function sobel(secondary, coef, alpha, r,g,b,a, r2,g2,b2, a2) {
             gl_FragColor = color;\
         }\
     ');
-    console.log(arguments);
+
     simpleShader.call(this, gl.sobel, {
         secondary : secondary,
         coef : coef,
