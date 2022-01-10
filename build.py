@@ -49,7 +49,7 @@ def build():
         data = compress_glsl(data)
     data = header + data
     open(output_path, 'w').write(data)
-    print 'built %s (%u lines)' % (output_path, len(data.split('\n')))
+    print('built %s (%u lines)' % (output_path, len(data.split('\n'))))
 
 def stat():
     return [os.stat(file).st_mtime for file in sources()]

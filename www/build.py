@@ -29,11 +29,11 @@ def do(files):
         f = open(new_file, 'w')
         try:
             f.write(env.get_template(file).render(debug=debug, docs=docs))
-            print 'success -', file
+            print('success -', file)
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
             f.write(html % (cgi.escape(file), cgi.escape(os.getcwd() + '/' + file), cgi.escape(traceback.format_exc())))
-            print 'error -', file
+            print('error -', file)
         f.close()
 
 def stat(files):
