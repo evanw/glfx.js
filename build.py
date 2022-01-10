@@ -8,7 +8,7 @@ import re, os, sys, time, tempfile
 
 header = '''/*
  * glfx.js
- * http://evanw.github.com/glfx.js/
+ * https://evanw.github.io/glfx.js/
  *
  * Copyright 2011 Evan Wallace
  * Released under the MIT license
