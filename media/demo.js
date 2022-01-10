@@ -94,9 +94,9 @@ var texture;
 
 var initCount = 0, loadCount = 1;
 var images = {
-    'image.jpg': { credit: 'matthigh', url: 'http://www.flickr.com/photos/matthigh/2125630879/' },
-    'lighthouse.jpg': { credit: 'renet', url: 'http://www.flickr.com/photos/renet/12135813/' },
-    'perspective.jpg': { credit: 'stuckincustoms', url: 'http://www.flickr.com/photos/stuckincustoms/1213760517/' }
+    'image.jpg': { credit: 'matthigh', url: 'https://www.flickr.com/photos/matthigh/2125630879/' },
+    'lighthouse.jpg': { credit: 'renet', url: 'https://www.flickr.com/photos/renet/12135813/' },
+    'perspective.jpg': { credit: 'stuckincustoms', url: 'https://www.flickr.com/photos/stuckincustoms/1213760517/' }
 };
 for (var file in images) {
     var image = images[file].image = new Image();
