@@ -78,9 +78,6 @@ var Texture = (function() {
         gl.framebuffer = gl.framebuffer || gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, gl.framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.id, 0);
-        if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
-            throw new Error('incomplete framebuffer');
-        }
         gl.viewport(0, 0, this.width, this.height);
 
         // do the drawing
