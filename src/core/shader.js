@@ -94,11 +94,12 @@ var Shader = (function() {
 
     Shader.prototype.drawRect = function(left, top, right, bottom) {
         var undefined;
-        var viewport = gl.getParameter(gl.VIEWPORT);
-        top = top !== undefined ? (top - viewport[1]) / viewport[3] : 0;
-        left = left !== undefined ? (left - viewport[0]) / viewport[2] : 0;
-        right = right !== undefined ? (right - viewport[0]) / viewport[2] : 1;
-        bottom = bottom !== undefined ? (bottom - viewport[1]) / viewport[3] : 1;
+        // this is (t/l/r/b - viewport minx/miny/maxx/maxy) / (viewport width/hieght/hieght/width)
+        // is top/left/right/botom always 0/0/0/0?
+        top = top !== undefined ? top / gl.drawingBufferHeight : 0;
+        left = left !== undefined ? left / gl.drawingBufferWidth : 0;
+        right = right !== undefined ? right / gl.drawingBufferWidth : 1;
+        bottom = bottom !== undefined ? bottom / gl.drawingBufferWidth : 1;
         if (gl.vertexBuffer == null) {
             gl.vertexBuffer = gl.createBuffer();
         }
