@@ -119,6 +119,18 @@ function getPixelArray() {
     return array;
 }
 
+function copyCanvas() {
+    var w = this.width;
+    var h = this.height;
+    var c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    var ctx = c.getContext('2d');
+    this.update();
+    ctx.drawImage( this, 0, 0, w, h );
+    return c;
+}
+
 function wrap(func) {
     return function() {
         // Make sure that we're using the correct global WebGL context
@@ -154,6 +166,7 @@ exports.canvas = function() {
     canvas.replace = wrap(replace);
     canvas.contents = wrap(contents);
     canvas.getPixelArray = wrap(getPixelArray);
+    canvas.copyCanvas = wrap(copyCanvas);
 
     // Filter methods
     canvas.brightnessContrast = wrap(brightnessContrast);
