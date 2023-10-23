@@ -67,12 +67,10 @@ function draw(texture, width, height) {
     if (!this._.isInitialized || texture._.width != this.width || texture._.height != this.height) {
         initialize.call(this, width ? width : texture._.width, height ? height : texture._.height);
     }
-
     texture._.use();
     this._.texture.drawTo(function() {
         Shader.getDefaultShader().drawRect();
     });
-
     return this;
 }
 
@@ -157,6 +155,8 @@ exports.canvas = function() {
 
     // Filter methods
     canvas.brightnessContrast = wrap(brightnessContrast);
+    canvas.level = wrap(level);
+    canvas.opacity = wrap(opacity);
     canvas.hexagonalPixelate = wrap(hexagonalPixelate);
     canvas.hueSaturation = wrap(hueSaturation);
     canvas.colorHalftone = wrap(colorHalftone);
