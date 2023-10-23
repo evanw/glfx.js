@@ -157,6 +157,7 @@ exports.canvas = function() {
 
     // Filter methods
     canvas.brightnessContrast = wrap(brightnessContrast);
+    canvas.level = wrap(level)
     canvas.hexagonalPixelate = wrap(hexagonalPixelate);
     canvas.hueSaturation = wrap(hueSaturation);
     canvas.colorHalftone = wrap(colorHalftone);
