@@ -31,7 +31,7 @@ function level(minInput, maxInput, gamma, minOutput, maxOutput) {
 
     const clampMinInput = clamp(0, minInput, 1)
     const clampMaxInput = clamp(0, maxInput, 1)
-    const clampGamma = clamp(0, gamma, 1)
+    const clampGamma = clamp(0, gamma, 255)
     const clampMinOutput = clamp(0, minOutput, 1)
     const clampMaxOutput = clamp(0, maxOutput, 1)
     simpleShader.call(this, gl.colorLevel, {

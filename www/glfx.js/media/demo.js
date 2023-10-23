@@ -230,7 +230,7 @@ var filters = {
         new Filter("Level",'level',function(){
             this.addSlider('minInput','MinInput',0,1,0.5,0.01)
             this.addSlider('maxInput','MaxInput',0,1,0.5,0.01)
-            this.addSlider('gamma','Gamma',0,1,0.5,0.01)
+            this.addSlider('gamma','Gamma',0,255,0,1)
             this.addSlider('minOutput','MinOutput',0,1,0.5,0.01)
             this.addSlider('maxOutput','MaxOutput',0,1,0.5,0.01)
         })
