@@ -26,7 +26,7 @@ function splineInterpolate(points) {
  * @param blue  (optional) A list of points that define the function for the blue
  *              channel (just like for red).
  */
-function curves(red, green, blue) {
+function quadTones(red, green, blue) {
     // Create the ramp texture
     red = splineInterpolate(red);
     if (arguments.length == 1) {
@@ -42,7 +42,7 @@ function curves(red, green, blue) {
     this._.extraTexture.initFromBytes(256, 1, array);
     this._.extraTexture.use(1);
 
-    gl.curves = gl.curves || new Shader(null, '\
+    gl.quadTones = gl.quadTones || new Shader(null, '\
         uniform sampler2D texture;\
         uniform sampler2D map;\
         varying vec2 texCoord;\
