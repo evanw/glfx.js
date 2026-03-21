@@ -12,5 +12,5 @@ function fliplayer(before, after) {
     var a = getSquareToQuad.apply(null, after);
     var b = getSquareToQuad.apply(null, before);
     var c = multiply(getInverse(a), b);
-    return this.matrixWarp(c);
+    return this.matrixWarpPlus(c);
 }
