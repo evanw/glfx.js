@@ -11,7 +11,7 @@
  * @param saturation -1 to 1 (-1 is solid gray, 0 is no change, and 1 is maximum contrast)
  */
 function hueSaturation(hue, saturation) {
-    gl.hueSaturation = gl.hueSaturation || new Shader(null, '\
+    gl.hueSaturationPlus = gl.hueSaturationPlus || new Shader(null, '\
         uniform sampler2D texture;\
         uniform float hue;\
         uniform float saturation;\
